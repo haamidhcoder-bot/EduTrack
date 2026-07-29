@@ -8,6 +8,3 @@ class Student(db.Model):
     student_name = db.Column(db.String(100), nullable=False)
     student_class = db.Column("class", db.Integer, nullable=False)
     section = db.Column(db.String(1), nullable=False)
-    student_gmail = db.Column(db.String(100))
-    DOB=db.Column(db.date)
-    mobile_no=db.Column(db.Integer(10),default=date.today)
