@@ -93,3 +93,25 @@ def show_students():
 def teachers_data():
     teachers=Teacher.query.all() 
     return render_template("teachers_data.html",teachers=teachers)
+
+@home_bp.route("/edit/<int:roll_no>")
+def edit(roll_no: int):
+    student = Student.query.filter(
+        Student.roll_no == roll_no
+    ).first()
+    if request.method == "POST" and student:
+        DOB = request.form.get("content","")  # to get info from input box
+        Mobile = request.form.get("Mobile","")
+        student.DOB = DOB
+        student.mobile_no=Mobile 
+        try:
+            if not "":
+                current_app.logger.info(f"{session.get('username', '')} has editted date of birth and phone number of student with roll no {roll_no}")
+                db.session.commit()  # commiting it
+                return redirect("/home")  # back to home
+        except Exception as e:
+            current_app.logger.error(e)
+            return redirect("/")
+        # create a new task
+    else:
+        return render_template("edit.html", student=student)

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="card edit-form">
+            <h2>Edit mark</h2>
+            <p style="color: var(--text-muted); margin-top: -8px;">
+                Roll no 
+            </p>
+            <form action="/edit/{{student.roll_no}}" method="post">
+                <label for="content">DOB</label>
+                <input type="date" name="content" id="content" placeholder="Enter Date" required>
+                <label for="Mobile">Mobile No</label>
+                <input type="phone" name="Mobile" id="content" placeholder="Enter Mobile No" required>
+                <button type="submit" style="width:100%;">Update</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

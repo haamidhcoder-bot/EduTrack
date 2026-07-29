@@ -1,5 +1,5 @@
 from app.extensions import db
-
+from datetime import date
 
 class Student(db.Model):
     __tablename__ = "students"
@@ -9,3 +9,5 @@ class Student(db.Model):
     student_class = db.Column("class", db.Integer, nullable=False)
     section = db.Column(db.String(1), nullable=False)
     student_gmail = db.Column(db.String(100))
+    DOB=db.Column(db.date)
+    mobile_no=db.Column(db.Integer(10),default=date.today)

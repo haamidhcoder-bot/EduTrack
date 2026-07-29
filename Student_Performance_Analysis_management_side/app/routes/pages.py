@@ -50,7 +50,7 @@ def profile():
 def register():
     return render_template("register.html")
 
-@pages_bp.route("/add_teacher",endpoint="add_teacher")
+@pages_bp.route("/add_teacher", methods=["GET", "POST"],endpoint="add_teacher")
 def add_teacher():
         if request.method == "POST":
             username = request.form.get("username", "").strip()
