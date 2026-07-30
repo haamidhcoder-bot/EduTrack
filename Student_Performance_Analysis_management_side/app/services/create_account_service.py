@@ -15,4 +15,4 @@ def create_account(user,password,confirm_password,Table):
          return ""
       return True
    else:
-        return ""
+        return "pass"

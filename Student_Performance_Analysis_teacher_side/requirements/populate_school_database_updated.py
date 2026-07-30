@@ -1,4 +1,5 @@
 try:
+    from datetime import date, timedelta
     import random
     import mysql.connector as sql
     from person_names_720 import person_names
@@ -120,6 +121,14 @@ try:
 
             for roll in range(1,21):
 
+                # Generate a random DOB
+                start = date(2007, 1, 1)
+                end = date(2019, 12, 31)
+                days = (end - start).days
+
+                dob = start + timedelta(days=random.randint(0, days))
+                mobile_no = random.randint(6000000000, 9999999999)
+
                 roll_no = int(f"{cls}{sections[section]}{roll:02d}")
 
                 student_name = person_names[name_index]
@@ -129,15 +138,17 @@ try:
                 cur.execute(
                     """
                     INSERT INTO students
-                    (roll_no,student_name,class,section,student_gmail)
-                    VALUES(%s,%s,%s,%s,%s)
+                    (roll_no, student_name, class, section, student_gmail, DOB, mobile_no)
+                    VALUES(%s,%s,%s,%s,%s,%s,%s)
                     """,
                     (
                         roll_no,
                         student_name,
                         cls,
                         section,
-                        student_gmail
+                        student_gmail,
+                        dob,
+                        mobile_no
                     )
                 )
 

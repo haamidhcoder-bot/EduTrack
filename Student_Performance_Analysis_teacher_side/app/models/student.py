@@ -9,3 +9,6 @@ class Student(db.Model):
     student_class = db.Column("class", db.Integer, nullable=False)
     section = db.Column(db.String(1), nullable=False)
     student_gmail = db.Column(db.String(100))
+    DOB=db.Column(db.Date)
+    mobile_no=db.Column(db.Integer)
+

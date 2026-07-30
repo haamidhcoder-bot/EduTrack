@@ -63,8 +63,11 @@ def add_teacher():
             verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher)
 
             if not verification:
-                return render_template("Error.html", data="Passwords do not match.",location="/")
-            
+                return render_template("Error.html", data="duplicate entry.",location="/")
+
+            if  verification=="pass":
+                return render_template("Error.html", data="passwords are not same.",location="/")
+
             if verification:
                 return redirect("/teachers_data")
         return render_template("add_teacher.html")

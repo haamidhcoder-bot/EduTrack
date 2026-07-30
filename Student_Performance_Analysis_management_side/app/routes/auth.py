@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app
+import random
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.Administration import Admin
 from app.services.create_account_service import create_account
+from app.services.email_service import email
+from config import dict_details,administrator1,administrator2
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -59,9 +62,23 @@ def register():
         if not username or not password or not confirm_password:
             return render_template("Error.html", data="Please fill in all fields.",location="/")
         
-        verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Admin)
+        OTP=str(random.randint(1000,9999))
+        session["OTP"]=OTP
+        email(administrator1,administrator2,"OTP verification",f"The OTP is --{OTP}--",dict_details[administrator1])
 
-        if not verification:
-            return render_template("Error.html", data="Passwords do not match.",location="/")
-        
+        return render_template("register_verification.html",username=username,password=password,confirm_password=confirm_password)
     return render_template("register.html")
+        
+
+@auth_bp.route("/register_verification/<username>/<password>/<confirm_password>", methods=["POST", "GET"])
+def register_verification(username: str,password:str,confirm_password:str):
+        if request.method=="POST":
+            otp=request.form.get("onepass","")
+            if otp==session.get("OTP"):
+                verified=create_account(user=username,password=password,confirm_password=confirm_password,Table=Admin)
+
+                if not verified:
+                    return render_template("Error.html", data="Passwords do not match.",location="/")
+            else:
+                return render_template("Error.html", data="incorrect OTP.",location="/")
+        return redirect(url_for("auth.login_page"))

@@ -153,6 +153,8 @@
                 <tr>
                     <th>Roll no</th>
                     <th>Student name</th>
+                    <th>Date of birth</th>
+                    <th>Mobile no</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -161,8 +163,10 @@
                     <tr data-roll="{{ stu.roll_no }}"  data-name="{{ stu.student_name|lower }}">
                         <td data-label="Roll no" >{{ stu.roll_no }}</td>
                         <td data-label="Student name" >{{ stu.student_name }}</td>
+                        <td data-label="Student DOB" >{{ stu.DOB }}</td>
+                        <td data-label="Student mobile" >{{ stu.mobile_no }}</td>
                         <td data-label="Actions" class="actions">
-                            <a href="#">Edit</a>
+                            <a href="/edit/{{stu.roll_no}}">Edit</a>
                         </td>
                     </tr>
                 {% endfor %}

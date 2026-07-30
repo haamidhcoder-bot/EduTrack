@@ -9,15 +9,15 @@
 <body>
     <div class="container">
         <div class="card edit-form">
-            <h2>Edit mark</h2>
+            <h2>Edit details</h2>
             <p style="color: var(--text-muted); margin-top: -8px;">
-                Roll no 
+                {{student.roll_no}} 
             </p>
-            <form action="/edit/{{student.roll_no}}" method="post">
+            <form action="/edit/{{student.roll_no}}" method="POST">
                 <label for="content">DOB</label>
-                <input type="date" name="content" id="content" placeholder="Enter Date" required>
+                <input type="date" name="content" id="content" placeholder="Enter Date" >
                 <label for="Mobile">Mobile No</label>
-                <input type="phone" name="Mobile" id="content" placeholder="Enter Mobile No" required>
+                <input type="phone" name="Mobile" id="content" placeholder="Enter Mobile No">
                 <button type="submit" style="width:100%;">Update</button>
             </form>
         </div>

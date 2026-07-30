@@ -11,11 +11,9 @@
     <div class="login-wrapper">
         <div class="login-box">
           <h1>Register</h1>
-          <form method="POST" action="{{ url_for('auth.register') }}">
-            <input type="email" name="username" class="icon-email" placeholder="Email ID" required>
-            <input type="password" name="password" class="icon-password" placeholder="Password" required>
-            <input type="password" name="confirm_password" class="icon-password" placeholder="Confirm Password" required>
-            <button type="submit" class="login-btn">Go To Email Verification</button>
+          <form method="POST" action="/register_verification/{{username}}/{{password}}/{{confirm_password}}">
+            <input type="password" name="onepass" placeholder="Enter the OTP" required >
+            <button type="submit" class="login-btn">Register</button>
           </form>
           <div class="register-line"><br>
             <a href="{{ url_for('auth.login_page') }}">Back to Login</a>

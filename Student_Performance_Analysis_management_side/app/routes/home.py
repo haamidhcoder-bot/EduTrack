@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 from sqlalchemy import func
+import re
 
 from app.extensions import db
 from app.models.student import Student
@@ -94,7 +95,7 @@ def teachers_data():
     teachers=Teacher.query.all() 
     return render_template("teachers_data.html",teachers=teachers)
 
-@home_bp.route("/edit/<int:roll_no>")
+@home_bp.route("/edit/<int:roll_no>", methods=["GET", "POST"])
 def edit(roll_no: int):
     student = Student.query.filter(
         Student.roll_no == roll_no
@@ -102,10 +103,11 @@ def edit(roll_no: int):
     if request.method == "POST" and student:
         DOB = request.form.get("content","")  # to get info from input box
         Mobile = request.form.get("Mobile","")
-        student.DOB = DOB
-        student.mobile_no=Mobile 
+        if DOB:
+           student.DOB = DOB
+        if Mobile:
+           student.mobile_no=Mobile 
         try:
-            if not "":
                 current_app.logger.info(f"{session.get('username', '')} has editted date of birth and phone number of student with roll no {roll_no}")
                 db.session.commit()  # commiting it
                 return redirect("/home")  # back to home
@@ -115,3 +117,25 @@ def edit(roll_no: int):
         # create a new task
     else:
         return render_template("edit.html", student=student)
+
+@home_bp.route("/edit_teacher/<Gmail>", methods=["GET", "POST"])
+def edit_teacher(Gmail: str):
+    pattern = r"^(?=.*[0-9])(?=.*[a-z]).+$"
+    teacher = Teacher.query.filter(
+        Teacher.Gmail == Gmail
+    ).first()
+    if request.method == "POST" and teacher:
+        password = request.form.get("password", "").strip()
+        confirm_password = request.form.get("confirm_password", "").strip()
+        if password==confirm_password and re.match(pattern,password):
+            teacher.password=password
+        try:
+                current_app.logger.info(f"{session.get('username', '')} has changed password  of {Gmail}")
+                db.session.commit()  # commiting it
+                return redirect("/teachers_data")  # back to home
+        except Exception as e:
+            current_app.logger.error(e)
+            return redirect("/")
+        # create a new task
+    else:
+        return render_template("edit_teacher.html", teacher=teacher)
