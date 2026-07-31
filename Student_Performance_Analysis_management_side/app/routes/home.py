@@ -5,11 +5,13 @@ import re
 from app.extensions import db
 from app.models.student import Student
 from app.models.teacher import Teacher
+from app.decorators import login_required
 
 home_bp = Blueprint("home", __name__)
 
 
 @home_bp.route("/home", endpoint="home", strict_slashes=False)
+@login_required
 def home():
     class_value = int(session.get("class_value", 0)) or None
     sec = session.get("sec", "")

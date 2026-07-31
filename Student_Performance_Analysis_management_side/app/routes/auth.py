@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app
 import random
+from datetime import timedelta
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.Administration import Admin
@@ -12,7 +13,7 @@ auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/", methods=["POST", "GET"], endpoint="login_page")
 def login_page():
-    if request.method == "POST" and not session.get("logged_in", ""):
+    if request.method == "POST" and not session.permanent:
         user_n = request.form.get("username", "")
         pass_n =request.form.get("password", "")
         session["username"] = user_n
@@ -21,8 +22,11 @@ def login_page():
             Admin.Gmail == user_n,
             Admin.password==pass_n
         ).first()
-        if remember and Admins:
+        if Admins:
             session["logged_in"] = True
+            if remember:
+                session.permanent = True
+
         if Admins:# and check_password_hash(Admin.password==pass_n):#for working of password hashing the password saved in database should be in the same hashing
             current_app.logger.info(f"{session.get('username', '')} logged in")
             return render_template(
@@ -33,13 +37,13 @@ def login_page():
         else:
             current_app.logger.error("incorrect username or password")
             return render_template("Error.html", data=" incorrect username or password", location="/")
-    elif session.get("logged_in", ""):
+    elif session.permanent:
         current_app.logger.info(f"{session.get('username', '')} logged in back")
         return render_template(
             "Home.html",
             class_value=int(session.get("class_value", 0)),
             sec=session.get("sec", ""),
-            log=session.get("logged_in", ""),
+            log=session.permanent,
             user=session.get("username", "")
         )
     return render_template("login_page.html")
@@ -49,7 +53,6 @@ def login_page():
 def log_out():
     current_app.logger.info(f"{session.get('username', '')} has logged out")
     session.clear()
-    session["logged_in"] = False
     return redirect(url_for("auth.login_page"))
 
 @auth_bp.route("/register", methods=["POST", "GET"])
