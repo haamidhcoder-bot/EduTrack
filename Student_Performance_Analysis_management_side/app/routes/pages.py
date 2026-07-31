@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 from app.extensions import db
 from app.models import Teacher
 from app.services.create_account_service import create_account
+from app.decorators import login_required
 
 pages_bp = Blueprint("pages", __name__)
 
@@ -51,6 +52,7 @@ def register():
     return render_template("register.html")
 
 @pages_bp.route("/add_teacher", methods=["GET", "POST"],endpoint="add_teacher")
+@login_required
 def add_teacher():
         if request.method == "POST":
             username = request.form.get("username", "").strip()

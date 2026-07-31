@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, session, curren
 
 from app.extensions import db
 from app.models import Mark
-from app.utils.Logged_in import login_required
+from app.decorators import login_required
 
 marks_bp = Blueprint("marks", __name__)
 

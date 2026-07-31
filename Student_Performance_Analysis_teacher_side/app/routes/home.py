@@ -3,11 +3,12 @@ from sqlalchemy import func
 
 from app.extensions import db
 from app.models import Student, Exam, Mark
-
+from app.decorators import login_required
 home_bp = Blueprint("home", __name__)
 
 
 @home_bp.route("/home", endpoint="home", strict_slashes=False)
+@login_required
 def home():
     class_value = int(session.get("class_value", 0)) or None
     sec = session.get("sec", "")
@@ -63,6 +64,7 @@ def home():
 
 
 @home_bp.route("/refresh", methods=["GET", "POST"], endpoint="refresh")
+@login_required
 def refresh():
     if request.method == "POST":
         class_input = request.form.get("class", "").strip()
@@ -143,6 +145,7 @@ def refresh():
     return redirect("/home")
 
 @home_bp.route("/show_results", methods=["GET", "POST"], endpoint="show_results")
+@login_required
 def show_results():
     if request.method == "POST":
         class_input = request.form.get("class", "").strip()

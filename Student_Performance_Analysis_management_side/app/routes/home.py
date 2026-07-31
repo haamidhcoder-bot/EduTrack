@@ -33,6 +33,7 @@ def home():
 
 
 @home_bp.route("/refresh", methods=["GET", "POST"], endpoint="refresh")
+@login_required
 def refresh():
     if request.method == "POST":
         class_input = request.form.get("class", "").strip()
@@ -63,6 +64,7 @@ def refresh():
     return redirect("/home")
 
 @home_bp.route("/show_students", methods=["GET", "POST"], endpoint="show_students")
+@login_required
 def show_students():
     if request.method == "POST":
         class_input = request.form.get("class", "").strip()
@@ -93,11 +95,13 @@ def show_students():
     return redirect("/home")
 
 @home_bp.route("/teachers_data", methods=["GET", "POST"], endpoint="/teachers_data",)
+@login_required
 def teachers_data():
     teachers=Teacher.query.all() 
     return render_template("teachers_data.html",teachers=teachers)
 
 @home_bp.route("/edit/<int:roll_no>", methods=["GET", "POST"])
+@login_required
 def edit(roll_no: int):
     student = Student.query.filter(
         Student.roll_no == roll_no
@@ -121,6 +125,7 @@ def edit(roll_no: int):
         return render_template("edit.html", student=student)
 
 @home_bp.route("/edit_teacher/<Gmail>", methods=["GET", "POST"])
+@login_required
 def edit_teacher(Gmail: str):
     pattern = r"^(?=.*[0-9])(?=.*[a-z]).+$"
     teacher = Teacher.query.filter(

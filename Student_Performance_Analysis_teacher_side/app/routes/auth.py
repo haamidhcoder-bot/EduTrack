@@ -8,7 +8,7 @@ auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/", methods=["POST", "GET"], endpoint="login_page")
 def login_page():
-    if request.method == "POST" and not session.get("logged_in", ""):
+    if request.method == "POST" and not session.permanent:
         user_n = request.form.get("username", "")
         pass_n =request.form.get("password", "")
         session["username"] = user_n
@@ -17,8 +17,10 @@ def login_page():
             Teacher.Gmail == user_n,
             Teacher.password==pass_n
         ).first()
-        if remember and teachers:
+        if teachers:
             session["logged_in"] = True
+            if remember:
+                session.permanent = True
         if teachers:# and check_password_hash(Teacher.password==pass_n):#for working of password hashing the password saved in database should be in the same hashing
             current_app.logger.info(f"{session.get('username', '')} logged in")
             return render_template(
@@ -30,7 +32,7 @@ def login_page():
         else:
             current_app.logger.error("incorrect username or password")
             return render_template("Error.html", data=" incorrect username or password", location="/")
-    elif session.get("logged_in", ""):
+    elif session.permanent:
         current_app.logger.info(f"{session.get('username', '')} logged in back")
         return render_template(
             "Home.html",
@@ -47,5 +49,4 @@ def login_page():
 def log_out():
     current_app.logger.info(f"{session.get('username', '')} has logged out")
     session.clear()
-    session["logged_in"] = False
     return redirect(url_for("auth.login_page"))
