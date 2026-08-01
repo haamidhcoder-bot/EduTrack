@@ -64,10 +64,13 @@ def register():
 
         if not username or not password or not confirm_password:
             return render_template("Error.html", data="Please fill in all fields.",location="/")
+
+        if password != confirm_password:
+            return render_template("register.html", error="Passwords do not match.")
         
         OTP=str(random.randint(1000,9999))
         session["OTP"]=OTP
-        email(administrator1,administrator2,"OTP verification",f"The OTP is --{OTP}--",dict_details[administrator1])
+        email(administrator1,administrator2,"OTP verification",f"The OTP for {username} is --{OTP}-- for registering an account",dict_details[administrator1])
 
         return render_template("register_verification.html",username=username,password=password,confirm_password=confirm_password)
     return render_template("register.html")
