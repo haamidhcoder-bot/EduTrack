@@ -508,6 +508,63 @@ td.total-marks {
     transition: transform 0.2s ease;
 }
 
+/* ---------------- Password visibility toggle ---------------- */
+
+.password-field {
+    position: relative;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+.password-field input[type="password"],
+.password-field input[type="text"] {
+    margin-bottom: 0;
+    padding-right: 46px;
+    box-sizing: border-box;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    margin: 0;
+    width: 22px;
+    height: 22px;
+    background: none;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 0;
+    color: var(--text-muted);
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:active {
+    background: none;
+    transform: translateY(-50%);
+}
+
+/* Inside the glass login card: swap the static lock icon for the interactive
+   toggle so they don't overlap, and match the white icon color scheme */
+.login-box .password-field input.icon-password {
+    background-image: none;
+}
+
+.login-box .password-toggle-btn {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.login-box .password-toggle-btn:hover,
+.login-box .password-toggle-btn:active {
+    background: none;
+    transform: translateY(-50%);
+}
+
 /* ---------------- Alerts / flash messages ---------------- */
 
 .alert {
