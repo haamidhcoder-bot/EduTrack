@@ -25,6 +25,7 @@
             <thead>
                 <tr>
                     <th>Teacher</th>
+                    <th>Password</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -37,7 +38,14 @@
                             <span class="teacher-email">{{ tech.Gmail }}</span>
                         </div>
                     </td>
-
+                    <td data-label="Password">
+                        <div class="password-cell">
+                            <span class="password-mask" data-password="{{ tech.password }}">••••••••</span>
+                            <button type="button" class="password-toggle" aria-label="Show password">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
                     <td>
                         <a href="/edit_teacher/{{tech.Gmail}}">Edit</a>
                     </td>
@@ -71,6 +79,27 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    // Show/hide password toggle
+document.querySelectorAll('.password-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        const mask = btn.previousElementSibling;
+        const icon = btn.querySelector('i');
+        const isHidden = mask.textContent.includes('•');
+
+        if (isHidden) {
+            mask.textContent = mask.dataset.password;
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+            btn.setAttribute('aria-label', 'Hide password');
+        } else {
+            mask.textContent = '••••••••';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+            btn.setAttribute('aria-label', 'Show password');
+        }
+    });
+});
 });
 </script>
 {%endblock%}
