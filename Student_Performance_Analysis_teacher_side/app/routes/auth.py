@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app
+import bcrypt as bp
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.models import Teacher
@@ -14,14 +15,13 @@ def login_page():
         session["username"] = user_n
         remember = request.form.get("remember", "")
         teachers = Teacher.query.filter(
-            Teacher.Gmail == user_n,
-            Teacher.password==pass_n
+            Teacher.Gmail == user_n
         ).first()
         if teachers:
             session["logged_in"] = True
             if remember:
                 session.permanent = True
-        if teachers:# and check_password_hash(Teacher.password==pass_n):#for working of password hashing the password saved in database should be in the same hashing
+        if teachers and bp.checkpw(pass_n.encode(),teachers.password.encode()):# and check_password_hash(Teacher.password==pass_n):#for working of password hashing the password saved in database should be in the same hashing
             current_app.logger.info(f"{session.get('username', '')} logged in")
             return render_template(
                 "Home.html",

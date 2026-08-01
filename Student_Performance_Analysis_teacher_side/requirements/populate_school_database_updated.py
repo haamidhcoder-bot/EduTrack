@@ -1,6 +1,7 @@
 try:
     from datetime import date, timedelta
     import random
+    import bcrypt as bp
     import mysql.connector as sql
     from person_names_720 import person_names
 
@@ -31,23 +32,6 @@ try:
         cur.execute(statement)
 
     cur.execute("use schooldb")
-    # -------------------------
-    # Teachers
-    # -------------------------
-    teachers = [
-        ("teacher1@gmail.com", "pass123"),
-        ("teacher2@gmail.com", "pass456"),
-        ("teacher3@gmail.com", "pass789"),
-        ("haamidhpm@gmail.com","pass13579")
-    ]
-
-    cur.executemany(
-        """
-        INSERT INTO teachers(Gmail,password)
-        VALUES(%s,%s)
-        """,
-        teachers
-    )
 
     # -------------------------
     # Exams

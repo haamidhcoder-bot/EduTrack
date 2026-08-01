@@ -74,3 +74,8 @@ ON marks(subject);
 
 CREATE INDEX idx_marks_exam
 ON marks(exam_id);
+
+CREATE TABLE Admin (
+    Gmail VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(255) NOT NULL
+);

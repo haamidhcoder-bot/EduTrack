@@ -30,23 +30,6 @@ try:
         cur.execute(statement)
 
     cur.execute("use schooldb")
-    # -------------------------
-    # Teachers
-    # -------------------------
-    teachers = [
-        ("teacher1@gmail.com", "pass123"),
-        ("teacher2@gmail.com", "pass456"),
-        ("teacher3@gmail.com", "pass789"),
-        ("haamidhpm@gmail.com","pass13579")
-    ]
-
-    cur.executemany(
-        """
-        INSERT INTO teachers(Gmail,password)
-        VALUES(%s,%s)
-        """,
-        teachers
-    )
 
     # -------------------------
     # Exams
