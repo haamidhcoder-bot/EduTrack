@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for, current_app
 import random
+import bcrypt as bp
 
 from app.extensions import db
 from app.models import Teacher
@@ -41,8 +42,9 @@ def forgot_password():
         OTP=str(random.randint(1000,9999))
         session["OTP"]=OTP
         email(administrator1,gmail,"OTP verification",f"The OTP for {gmail} is  --{OTP}-- for changing password",dict_details[administrator1])
-
+        
         return render_template("forgot_password_verification.html",username=gmail,password=new_password)
+        
 
     return render_template("forgot_password.html")
 
@@ -52,7 +54,7 @@ def forgot_password_verification(username: str,password:str):
         if request.method=="POST":
             otp=request.form.get("onepass","")
             if otp==session.get("OTP"):
-                teacher.password = password
+                teacher.password = bp.hashpw(password.encode(),bp.gensalt()) 
                 db.session.commit()
                 current_app.logger.info(f"Password reset requested for {username}")
             else:

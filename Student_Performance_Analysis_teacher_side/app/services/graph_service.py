@@ -1,10 +1,3 @@
-"""Performance-graph generation, extracted from the original `/graph` route.
-
-The matplotlib/seaborn plotting logic and all queries are identical to the
-original code (including the `res` and `students` queries, which were
-computed but not actually used in the plot in the original version - kept
-as-is since the request was to reorganize, not to change behavior).
-"""
 from io import BytesIO
 import base64
 
@@ -17,17 +10,6 @@ from app.models import Exam, Mark, Student
 
 def generate_graph(roll_no, subject, exam_id, class_value, sec):
     exam_all = Exam.query.order_by(Exam.exam_id).all()
-
-    res = Mark.query.filter(
-        Mark.student_class == class_value,
-        Mark.exam_id == exam_id,
-        Mark.subject == subject
-    ).all()
-
-    students = Student.query.filter(
-        Student.student_class == class_value,
-        Student.section == sec
-    ).all()
 
     mark = Mark.query.filter(
         Mark.roll_no == roll_no,
@@ -133,7 +115,86 @@ def generate_graph(roll_no, subject, exam_id, class_value, sec):
     plt.tight_layout()
     buffer = BytesIO()
 
-    plt.savefig(buffer, format="png")
+    plt.savefig(
+        buffer,
+        format="png",
+        facecolor=bg,
+        bbox_inches="tight",
+        pad_inches=0.3
+    )
+
+    buffer.seek(0)
+
+    graph_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+    plt.close()
+
+    return graph_base64, exam1
+
+
+def generate_pie_graph(roll_no, exam_id, class_value, sec):
+    exam = Exam.query.filter(Exam.exam_id == exam_id).first()
+    exam1 = exam.exam_name
+
+    mark = Mark.query.filter(
+        Mark.roll_no == roll_no,
+        Mark.exam_id == exam_id
+    ).all()
+
+    labels = [m.subject for m in mark]
+    values = [m.marks for m in mark]
+
+    # Seaborn Theme
+    sns.set_theme(style="white")
+
+    # Create Figure
+    fig, ax = plt.subplots(figsize=(8, 8))
+
+    # Background Color
+    bg = "#1565A6"          # Light Blue
+    fig.patch.set_facecolor(bg)
+    ax.set_facecolor(bg)
+
+    colors = sns.color_palette("pastel", len(labels))
+
+    # Pie Chart
+    wedges, texts, autotexts = ax.pie(
+        values,
+        labels=labels,
+        autopct="%1.1f%%",
+        startangle=90,
+        radius=1.15,
+        colors=colors,
+        textprops={"color": "white", "fontsize": 13},
+        wedgeprops={"edgecolor": bg, "linewidth": 2}
+    )
+
+    for autotext in autotexts:
+        autotext.set_color("white")
+        autotext.set_fontsize(12)
+        autotext.set_weight("bold")
+
+    # Labels
+    plt.title(
+        f"Total Marks Breakdown {roll_no}",
+        fontsize=22,
+        color="white",
+        weight="bold",
+        pad=12
+    )
+
+    ax.axis("equal")
+
+    plt.tight_layout()
+    buffer = BytesIO()
+
+    plt.savefig(
+        buffer,
+        format="png",
+        facecolor=bg,
+        bbox_inches="tight",
+        pad_inches=0.3
+    )
 
     buffer.seek(0)
 

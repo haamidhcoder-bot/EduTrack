@@ -231,6 +231,7 @@
                     <th>Marks</th>
                     <th>Percentage</th>
                     <th>Result</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -241,6 +242,9 @@
                     <td data-label="Marks" class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{{ total_marks.get(stu.roll_no, 0) }}</td>
                     <td  class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{{ "%.2f"|format((total_marks.get(stu.roll_no, 0)/500)*100) }}</td>
                     <td class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{% if total_marks.get(stu.roll_no, 0) <= 150 %}Fail{%else%}Pass{% endif %}</td>
+                    <td data-label="Actions" class="actions">
+                        <a href="/piegraph/{{ stu.roll_no }}/{{ exam_id }}">Graph analysis</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

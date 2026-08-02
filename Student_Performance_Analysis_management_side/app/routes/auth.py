@@ -22,12 +22,11 @@ def login_page():
         Admins = Admin.query.filter(
             Admin.Gmail == user_n
         ).first()
-        if Admins:
+
+        if Admins and bp.checkpw(pass_n.encode(),Admins.password.encode()):
             session["logged_in"] = True
             if remember:
                 session.permanent = True
-
-        if Admins and bp.checkpw(pass_n.encode(),Admins.password.encode()):# and check_password_hash(Admin.password==pass_n):#for working of password hashing the password saved in database should be in the same hashing
             current_app.logger.info(f"{session.get('username', '')} logged in")
             return render_template(
                 "Home.html",

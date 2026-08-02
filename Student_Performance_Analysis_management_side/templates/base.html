@@ -6,27 +6,99 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        nav.dock-nav {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(135deg, #0d2f1f, #16472e);
+            padding: 12px 32px;
+            border-radius: 46px;
+            list-style: none;
+        }
+
+        nav.dock-nav .dock-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: #a9c3b3;
+            text-decoration: none;
+            transition: transform .25s ease, background-color .25s ease,
+                        color .25s ease, box-shadow .25s ease;
+        }
+
+        nav.dock-nav .dock-item i {
+            font-size: 19px;
+            transition: font-size .25s ease;
+        }
+
+        nav.dock-nav .dock-label {
+            position: absolute;
+            top: 100%;
+            margin-top: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #f4f1e3;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity .25s ease, transform .25s ease;
+            pointer-events: none;
+        }
+
+        nav.dock-nav .dock-item:hover,
+        nav.dock-nav .dock-item.active {
+            transform: translateY(-16px);
+            background: linear-gradient(135deg, #2f8f5b, #3fae72);
+            color: #f4f1e3;
+            box-shadow: 0 10px 18px rgba(47, 143, 91, 0.5);
+        }
+
+        nav.dock-nav .dock-item:hover i,
+        nav.dock-nav .dock-item.active i {
+            font-size: 21px;
+        }
+
+        nav.dock-nav .dock-item:hover .dock-label,
+        nav.dock-nav .dock-item.active .dock-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
     {%block head%}<!--jinga-->{%endblock%}
 </head>
 <body>
     <div class="navbar">
-        <div class="brand">SCHOOL PERFORMANCE ANALYSIS (MANAGEMENT)</div>
+        <div class="brand">SCHOOL PERFORMANCE ANALYSIS</div>
   
-        <nav>
-            <a href="/home" class="{% if request.path=='/' or  request.path=='/show_students' or  request.path=='/home'%}active{% endif %}">
-                <i class="fa-solid fa-house"></i> Home
+        <nav class="dock-nav">
+            <a href="/home" class="dock-item {% if request.path=='/home'or request.path=='/show_students' or request.path=='/' %}active{% endif %}">
+                <i class="fa-solid fa-house"></i>
+                <span class="dock-label">Home</span>
             </a>
   
-            <a href="/teachers_data" class="{% if request.path=='/teachers_data' %}active{% endif %}">
-                <i class="fa-solid fa-users"></i> Teachers
+            <a href="/teachers_data" class="dock-item {% if request.path=='/teachers_data' %}active{% endif %}">
+                <i class="fa-solid fa-chalkboard-user"></i>
+                <span class="dock-label">Teachers</span>
+            </a>
+
+            <a href="/attendance" class="dock-item {% if request.path=='/attendance' %}active{% endif %}">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span class="dock-label">Attendance</span>
             </a>
             
-            <a href="/about" class="{% if request.path=='/about' %}active{% endif %}">
-                <i class="fa-solid fa-circle-info"></i> About Us
+            <a href="/about" class="dock-item {% if request.path=='/about' %}active{% endif %}">
+                <i class="fa-solid fa-circle-info"></i>
+                <span class="dock-label">About Us</span>
             </a>
             
-            <a href="/profile" class="{% if request.path=='/profile' %}active{% endif %}">
+            <a href="/profile" class="dock-item {% if request.path=='/profile' %}active{% endif %}">
                 <i class="fa-solid fa-circle-user"></i>
+                <span class="dock-label">Profile</span>
             </a>
 
         </nav>

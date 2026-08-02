@@ -49,6 +49,7 @@ def home():
             total_marks=total_marks,
             sub=sub,
             exam=exa,
+            exam_id=exam.exam_id,
             sec=sec
         )
 
@@ -118,6 +119,7 @@ def refresh():
                 total_marks=total_marks,
                 sub=sub,
                 exam=exa,
+                exam_id=exam.exam_id,
                 sec=sec
             )
 
@@ -199,6 +201,7 @@ def show_results():
                 total_marks=total_marks,
                 sub=sub,
                 exam=exa,
+                exam_id=exam.exam_id,
                 sec=sec
             )
 

@@ -4,7 +4,7 @@ from sqlalchemy import func
 from app.models import Student
 from app.models import Exam
 from app.models import Mark
-from app.services.graph_service import generate_graph
+from app.services.graph_service import generate_graph, generate_pie_graph
 from app.services.leaderboard_service import compute_leaderboard
 from app.extensions import db
 from app.decorators import login_required
@@ -23,6 +23,17 @@ def graph(roll_no: int, subject: str, exam_id: int):
             sec=session.get("sec")
         )
         return render_template("graph.html", graph=graph_image)
+
+
+@reports_bp.route("/piegraph/<int:roll_no>/<int:exam_id>", methods=["POST", "GET"], endpoint="piegraph")
+def piegraph(roll_no: int, exam_id: int):
+    graph_image, _exam1 = generate_pie_graph(
+        roll_no=roll_no,
+        exam_id=exam_id,
+        class_value=session.get("class_value"),
+        sec=session.get("sec")
+    )
+    return render_template("graph.html", graph=graph_image)
 
 
 @reports_bp.route("/leaderboard", methods=["GET", "POST"], endpoint="leaderboard")
