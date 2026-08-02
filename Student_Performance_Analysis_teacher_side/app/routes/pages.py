@@ -3,7 +3,7 @@ import random
 
 from app.extensions import db
 from app.models import Teacher
-from config import dict_details,administrator1,administrator2
+from config import dict_details,administrator1
 from app.services.email_service import email
 
 pages_bp = Blueprint("pages", __name__)
@@ -19,29 +19,6 @@ def support():
     return render_template("support.html")
 
 
-# @pages_bp.route("/forget_pass", methods=["GET", "POST"], endpoint="forgot_password")
-# def forgot_password():
-#     if request.method == "POST":
-#         email = request.form.get("email", "").strip()
-#         new_password = request.form.get("new_password", "").strip()
-#         confirm_password = request.form.get("confirm_password", "").strip()
-
-#         if not email or not new_password or not confirm_password:
-#             return render_template("forgot_password.html", error="Please fill in all fields.")
-
-#         if new_password != confirm_password:
-#             return render_template("forgot_password.html", error="Passwords do not match.")
-
-#         teacher = Teacher.query.filter(Teacher.Gmail == email).first()
-#         if not teacher:
-#             return render_template("forgot_password.html", error="No teacher account found for that email.")
-
-#         teacher.password = new_password
-#         db.session.commit()
-#         current_app.logger.info(f"Password reset requested for {email}")
-#         return render_template("success.html", data="Password updated successfully!", location="/")
-
-#     return render_template("forgot_password.html")
 
 @pages_bp.route("/forget_pass", methods=["GET", "POST"], endpoint="forgot_password")
 def forgot_password():
@@ -63,7 +40,7 @@ def forgot_password():
 
         OTP=str(random.randint(1000,9999))
         session["OTP"]=OTP
-        email(administrator1,administrator2,"OTP verification",f"The OTP for {gmail} is  --{OTP}-- for changing password",dict_details[administrator1])
+        email(administrator1,gmail,"OTP verification",f"The OTP for {gmail} is  --{OTP}-- for changing password",dict_details[administrator1])
 
         return render_template("forgot_password_verification.html",username=gmail,password=new_password)
 

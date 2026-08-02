@@ -6,7 +6,7 @@ from app.models.teacher import Teacher
 from app.models.Administration import Admin
 from app.services.create_account_service import create_account
 from app.decorators import login_required
-from config import dict_details,administrator1,administrator2
+from config import dict_details,administrator1
 from app.services.email_service import email
 
 pages_bp = Blueprint("pages", __name__)
@@ -42,7 +42,7 @@ def forgot_password():
 
         OTP=str(random.randint(1000,9999))
         session["OTP"]=OTP
-        email(administrator1,administrator2,"OTP verification",f"The OTP for {gmail}is  --{OTP}-- for changing password",dict_details[administrator1])
+        email(administrator1,gmail,"OTP verification",f"The OTP for {gmail}is  --{OTP}-- for changing password",dict_details[administrator1])
 
         return render_template("forgot_password_verification.html",username=gmail,password=new_password)
 
