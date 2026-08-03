@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 from sqlalchemy import func
 import re
+import bcrypt as bp
 
 from app.extensions import db
 from app.models.student import Student
@@ -134,8 +135,12 @@ def edit_teacher(Gmail: str):
     if request.method == "POST" and teacher:
         password = request.form.get("password", "").strip()
         confirm_password = request.form.get("confirm_password", "").strip()
+        class_teacher=request.form.get("class_teacher","").strip()
+        class_teacher_sec=request.form.get("class_teacher_sec","").strip()
         if password==confirm_password and re.match(pattern,password):
-            teacher.password=password
+            teacher.password=bp.hashpw(password.encode(), bp.gensalt())
+            teacher.class_teacher=class_teacher
+            teacher.class_teacher_sec=class_teacher_sec
         try:
                 current_app.logger.info(f"{session.get('username', '')} has changed password  of {Gmail}")
                 db.session.commit()  # commiting it

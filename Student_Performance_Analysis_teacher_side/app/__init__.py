@@ -10,6 +10,7 @@ import os
 
 from flask import Flask
 import mysql.connector as sql
+from datetime import timedelta
 
 from config import Mysql_pass, session_key
 from app.extensions import db
@@ -36,6 +37,7 @@ def create_app():
     )
 
     app.secret_key = session_key  # required for sessions to work
+    app.permanent_session_lifetime = timedelta(hours=1)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = (
         f"mysql+pymysql://root:{Mysql_pass}@localhost/schooldb"  # format for using mysql

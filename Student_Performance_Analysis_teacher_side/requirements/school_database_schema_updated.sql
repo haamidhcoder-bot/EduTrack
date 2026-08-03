@@ -9,7 +9,9 @@ USE schooldb;
 
 CREATE TABLE teachers (
     Gmail VARCHAR(50) PRIMARY KEY,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    class_teacher INT,
+    class_teacher_sec CHAR(1)
 );
 
 -- ==========================================================
@@ -60,6 +62,19 @@ CREATE TABLE marks (
         ON UPDATE CASCADE,
 
     CHECK (marks BETWEEN 0 AND 100 OR marks IS NULL)
+);
+
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    roll_no INT NOT NULL,
+    class_value INT NOT NULL,
+    section VARCHAR(10) NOT NULL,
+    date DATE NOT NULL,
+    status VARCHAR(10) NOT NULL,          -- 'present' | 'absent' | 'leave'
+    marked_by VARCHAR(120),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT uq_attendance_student_day UNIQUE (roll_no, class_value, section, date)
 );
 
 -- ==========================================================

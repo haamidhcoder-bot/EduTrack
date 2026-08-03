@@ -77,12 +77,17 @@ def add_teacher():
         if request.method == "POST":
             username = request.form.get("username", "").strip()
             password = request.form.get("password", "").strip()
+            class_teacher=request.form.get("class_teacher","").strip()
+            class_teacher_sec=request.form.get("class_teacher_sec","").strip()
             confirm_password = request.form.get("confirm_password", "").strip()
 
             if not username or not password or not confirm_password:
                 return render_template("Error.html", data="Please fill in all fields.",location="/")
-            
-            verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher)
+
+            if class_teacher and class_teacher_sec:
+                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec)
+            else:
+                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher)
 
             if not verification:
                 return render_template("Error.html", data="duplicate entry.",location="/")

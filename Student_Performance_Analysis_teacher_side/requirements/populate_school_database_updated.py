@@ -1,7 +1,6 @@
 try:
     from datetime import date, timedelta
     import random
-    import bcrypt as bp
     import mysql.connector as sql
     from person_names_720 import person_names
 
