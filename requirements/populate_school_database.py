@@ -20,7 +20,7 @@ try:
 
     schema_path = os.path.join(
         os.path.dirname(__file__),
-        "school_database_schema_updated.sql"
+        "school_database_schema.sql"
     )
 
     with open(schema_path) as f:
@@ -92,6 +92,18 @@ try:
         "C":3
     }
 
+    # -------------------------
+    # Attendance settings
+    # -------------------------
+    attendance_start = date(2026, 6, 1)
+    attendance_days = 20   # number of school days to generate per student
+
+    status_choices = (
+        ["present"] * 8 +
+        ["absent"] +
+        ["leave"]
+    )
+
     random.shuffle(person_names)
 
     name_index = 0
@@ -160,6 +172,30 @@ try:
                             )
                         )
 
+                # -------------------------
+                # Attendance
+                # -------------------------
+
+                for day_offset in range(attendance_days):
+                    att_date = attendance_start + timedelta(days=day_offset)
+                    status = random.choice(status_choices)
+
+                    cur.execute(
+                        """
+                        INSERT INTO attendance
+                        (roll_no, class_value, section, date, status, marked_by)
+                        VALUES(%s,%s,%s,%s,%s,%s)
+                        """,
+                        (
+                            roll_no,
+                            cls,
+                            section,
+                            att_date,
+                            status,
+                            "admin@school.com"
+                        )
+                    )
+
     conn.commit()
     conn.close()
 
@@ -167,4 +203,3 @@ try:
 
 except Exception as e:
     print(f"ERROR:{e}")
-

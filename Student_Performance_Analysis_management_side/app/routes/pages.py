@@ -2,11 +2,11 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 import random
 import bcrypt as bp
 
-from app.extensions import db
-from app.models.teacher import Teacher
-from app.models.Administration import Admin
+from extensions import db
+from models.teacher import Teacher
+from models.Administration import Admin
 from app.services.create_account_service import create_account
-from app.decorators import login_required
+from decorators import login_required
 from config import dict_details,administrator1
 from app.services.email_service import email
 
@@ -93,7 +93,7 @@ def add_teacher():
                 return render_template("Error.html", data="duplicate entry.",location="/")
 
             if  verification=="pass":
-                return render_template("Error.html", data="passwords are not same.",location="/")
+                return render_template("Error.html", data="passwords are not same.",location="/home")
 
             if verification:
                 return redirect("/teachers_data")

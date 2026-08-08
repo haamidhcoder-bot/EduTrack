@@ -3,10 +3,10 @@ from sqlalchemy import func
 import re
 import bcrypt as bp
 
-from app.extensions import db
-from app.models.student import Student
-from app.models.teacher import Teacher
-from app.decorators import login_required
+from extensions import db
+from models.student import Student
+from models.teacher import Teacher
+from decorators import login_required
 
 home_bp = Blueprint("home", __name__)
 

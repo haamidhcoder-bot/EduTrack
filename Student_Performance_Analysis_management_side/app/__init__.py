@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from config import Mysql_pass, session_key
 from app.extensions import db
-from app.utils.logger import setup_logger
+from utils.logger import setup_logger
 from app.routes import register_blueprints
 
 # Project root (one level above the app/ package), so templates/ and

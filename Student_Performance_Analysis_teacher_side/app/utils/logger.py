@@ -1,15 +1,15 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from app.models.teacher import Teacher
 
 def setup_logger(app):
     formatter = logging.Formatter(
         "%(asctime)s - %(levelname)s - %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S"
     )
+
     handler = RotatingFileHandler(
-        "Teacher App.log",
+        "Management App.log",
         maxBytes=1024 * 1024,  # 1 MB
         backupCount=5
     )

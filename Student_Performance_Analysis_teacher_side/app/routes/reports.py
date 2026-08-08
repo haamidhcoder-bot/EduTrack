@@ -4,12 +4,12 @@ from datetime import date
 from flask import Blueprint, render_template, request, session,current_app,redirect
 from sqlalchemy import func
 
-from app.models import Student,teacher
-from app.models.attendance import Attendance
+from models import Student,teacher
+from models.attendance import Attendance
 from app.services.graph_service import generate_graph, generate_pie_graph
 from app.services.leaderboard_service import compute_leaderboard
-from app.extensions import db
-from app.decorators import login_required
+from extensions import db
+from decorators import login_required
 
 reports_bp = Blueprint("reports", __name__)
 

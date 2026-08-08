@@ -4,7 +4,7 @@ from datetime import timedelta
 import bcrypt as bp
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from app.models.Administration import Admin
+from models.Administration import Admin
 from app.services.create_account_service import create_account
 from app.services.email_service import email
 from config import dict_details,administrator1,administrator2

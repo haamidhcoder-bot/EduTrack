@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 from sqlalchemy import func
 
-from app.extensions import db
-from app.models import Student, Exam, Mark
-from app.decorators import login_required
+from extensions import db
+from models import Student, Exam, Mark
+from decorators import login_required
 home_bp = Blueprint("home", __name__)
 
 

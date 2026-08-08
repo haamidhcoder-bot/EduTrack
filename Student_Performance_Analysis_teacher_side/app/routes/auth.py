@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app
 import bcrypt as bp
 
-from werkzeug.security import generate_password_hash, check_password_hash
-from app.models import Teacher
+from models import Teacher
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -20,6 +19,7 @@ def login_page():
 
         if teachers and bp.checkpw(pass_n.encode(),teachers.password.encode()):
             session["logged_in"] = True
+            session["class_teacher"] = teachers.class_teacher
             if remember:
                 session.permanent = True
             current_app.logger.info(f"{session.get('username', '')} logged in")

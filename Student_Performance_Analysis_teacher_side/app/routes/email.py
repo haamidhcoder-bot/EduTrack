@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, session, jsonify, current_app
 
 from config import dict_details
-from app.models import Student, Exam, Mark
+from models import Student, Exam, Mark
 from app.services.email_service import email
-from app.decorators import login_required
+from decorators import login_required
 
 email_bp = Blueprint("email", __name__)
 

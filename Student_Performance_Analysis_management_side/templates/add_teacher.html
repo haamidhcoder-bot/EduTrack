@@ -31,6 +31,7 @@
 
                 <input type="number" name="class_teacher" id="" placeholder="Enter the class for the teacher">
                 <select name="class_teacher_sec" id="sec">
+                    <option value="" {% if sec == "Select Section" %}selected{% endif %}>Select Section</option>
                     <option value="A" {% if sec == "A" %}selected{% endif %}>A</option>
                     <option value="B" {% if sec == "B" %}selected{% endif %}>B</option>
                     <option value="C" {% if sec == "C" %}selected{% endif %}>C</option>

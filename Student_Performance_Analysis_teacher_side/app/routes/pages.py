@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 import random
 import bcrypt as bp
 
-from app.extensions import db
-from app.models import Teacher
+from extensions import db
+from models import Teacher
 from config import dict_details,administrator1
 from app.services.email_service import email
 

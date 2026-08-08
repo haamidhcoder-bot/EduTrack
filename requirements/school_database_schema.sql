@@ -1,3 +1,10 @@
+-- ==========================================================
+-- COMMON.SQL
+-- Content identical in both:
+--   school_database_schema_updated.sql
+--   school_database_schema_updated_m.sql
+-- ==========================================================
+
 DROP DATABASE IF EXISTS schooldb;
 CREATE DATABASE  schooldb;
 
@@ -15,7 +22,8 @@ CREATE TABLE teachers (
 );
 
 -- ==========================================================
--- Students
+-- Students (common columns only — see differences.sql for
+-- columns that exist in only one file)
 -- ==========================================================
 
 CREATE TABLE students (
@@ -23,8 +31,9 @@ CREATE TABLE students (
     student_name VARCHAR(100) NOT NULL,
     class INT NOT NULL CHECK (class BETWEEN 1 AND 12),
     section CHAR(1) NOT NULL CHECK (section IN ('A','B','C')),
-    student_gmail CHAR(100) CHECK (student_gmail LIKE '%@gmail.com')
-
+    student_gmail CHAR(100) CHECK (student_gmail LIKE '%@gmail.com'),
+    DOB DATE,                 
+    mobile_no BIGINT          
 );
 
 -- ==========================================================
@@ -75,7 +84,28 @@ ON marks(subject);
 CREATE INDEX idx_marks_exam
 ON marks(exam_id);
 
+-- ==========================================================
+-- Admin
+-- ==========================================================
+
 CREATE TABLE Admin (
     Gmail VARCHAR(50) PRIMARY KEY,
     password VARCHAR(255) NOT NULL
+);
+
+-- ==========================================================
+-- Attendance
+-- ==========================================================
+
+CREATE TABLE attendance (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    roll_no INT NOT NULL,
+    class_value INT NOT NULL,
+    section VARCHAR(10) NOT NULL,
+    date DATE NOT NULL,
+    status VARCHAR(10) NOT NULL,          -- 'present' | 'absent' | 'leave'
+    marked_by VARCHAR(120),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT uq_attendance_student_day UNIQUE (roll_no, class_value, section, date)
 );

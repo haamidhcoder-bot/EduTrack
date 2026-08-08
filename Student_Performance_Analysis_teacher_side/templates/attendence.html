@@ -54,6 +54,22 @@
         background: #fff;
     }
 
+    .mark-all-btn {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        background: #1f9d55;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .mark-all-btn:hover {
+        background: #188046;
+    }
+
     .attendance-legend {
         display: flex;
         gap: 18px;
@@ -209,6 +225,7 @@
     <div class="attendance-toolbar">
         <input type="text" class="attendance-search" placeholder="Search by name or roll no" id="attendanceSearch">
         <div class="attendance-toolbar-right">
+            <button type="button" class="mark-all-btn" id="markAllPresentBtn" style="display:none;">Mark all present (today)</button>
             <input type="month" class="attendance-month" id="attendanceMonth">
         </div>
     </div>
@@ -261,6 +278,14 @@
         return new Date(year, month, 0).getDate();
     }
 
+    // True only when the month currently being viewed is the real, current
+    // calendar month — the "mark all present" button only ever targets today.
+    function viewingCurrentMonth() {
+        const now = new Date();
+        const currentYm = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+        return monthInput.value === currentYm;
+    }
+
     function makeCell(className, text) {
         const el = document.createElement('div');
         el.className = 'acell ' + className;
@@ -271,6 +296,7 @@
     function renderGrid() {
         const [year, month] = monthInput.value.split("-").map(Number);
         const numDays = daysInMonth(year, month);
+        const todayDay = viewingCurrentMonth() ? new Date().getDate() : null;
 
         const grid = document.getElementById('attendanceGrid');
         grid.innerHTML = "";
@@ -323,6 +349,26 @@
     }
 
     renderGrid();
+
+    // "Mark all present (today)" — only ever touches today's column, and only
+    // students who are still unmarked ("none"). Anyone already set to
+    // present/absent/leave for today is left exactly as they are.
+    const markAllBtn = document.getElementById('markAllPresentBtn');
+    if (viewingCurrentMonth()) {
+        markAllBtn.style.display = "";
+    }
+
+    markAllBtn.addEventListener('click', function () {
+        if (!viewingCurrentMonth()) return;
+        const today = new Date().getDate();
+        students.forEach(function (s) {
+            const current = state[s.roll_no][today] || "none";
+            if (current === "none") {
+                state[s.roll_no][today] = "present";
+            }
+        });
+        renderGrid();
+    });
 
     // Live search by name or roll no — hides every cell belonging to a non-matching
     // student; CSS Grid auto-placement then closes the gap automatically.
