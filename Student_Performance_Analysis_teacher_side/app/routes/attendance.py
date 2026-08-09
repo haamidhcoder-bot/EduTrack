@@ -2,8 +2,7 @@ from datetime import date
 
 from flask import Blueprint, render_template, request, session, current_app
 
-from shared.models.student import Student
-from shared.models import Attendance
+from shared.models import Student,Attendance
 from shared import login_required
 
 attendance_bp = Blueprint("attendance", __name__)

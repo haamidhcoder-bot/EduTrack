@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app
 import bcrypt as bp
 
-from models import Teacher
+from shared.models import Teacher
 
 auth_bp = Blueprint("auth", __name__)
 

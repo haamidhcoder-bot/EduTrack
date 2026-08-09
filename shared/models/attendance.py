@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from extensions import db
+from shared.extensions import db
 
 
 class Attendance(db.Model):

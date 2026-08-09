@@ -4,8 +4,8 @@ from flask import Flask
 import mysql.connector as sql
 from datetime import timedelta
 
-from config import Mysql_pass, session_key
-from app.extensions import db
+from shared.config import Mysql_pass, session_key
+from shared import db
 from utils.logger import setup_logger
 from app.routes import register_blueprints
 

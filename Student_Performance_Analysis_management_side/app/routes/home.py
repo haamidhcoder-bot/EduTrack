@@ -1,12 +1,9 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
-from sqlalchemy import func
 import re
 import bcrypt as bp
 
-from extensions import db
-from models.student import Student
-from models.teacher import Teacher
-from decorators import login_required
+from shared import db,login_required
+from shared.models import Student,Teacher
 
 home_bp = Blueprint("home", __name__)
 

@@ -6,8 +6,8 @@ podium/total_marks calculation are identical to the original code.
 """
 from sqlalchemy import func
 
-from app.extensions import db
-from app.models import Student, Exam, Mark
+from shared import db
+from shared.models import Student, Exam, Mark
 
 
 def compute_leaderboard(class_value, exam_name):

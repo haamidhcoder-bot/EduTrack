@@ -296,7 +296,6 @@
     function renderGrid() {
         const [year, month] = monthInput.value.split("-").map(Number);
         const numDays = daysInMonth(year, month);
-        const todayDay = viewingCurrentMonth() ? new Date().getDate() : null;
 
         const grid = document.getElementById('attendanceGrid');
         grid.innerHTML = "";

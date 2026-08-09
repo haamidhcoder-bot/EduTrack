@@ -1,7 +1,7 @@
 import re
 import bcrypt as bp
 
-from app.extensions import db
+from shared import db
 
 PASSWORD_PATTERN = r"^(?=.*[0-9])(?=.*[a-z]).+$"
 

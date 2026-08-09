@@ -4,7 +4,7 @@ from flask import session, redirect,url_for
 def login_required(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if session.get("logged_in") and session.get("class_teacher","") and "username" not in session:
+        if session.get("logged_in") :
             return func(*args, **kwargs)
 
         return redirect(url_for("auth.login_page"))

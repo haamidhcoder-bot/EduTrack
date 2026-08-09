@@ -2,12 +2,10 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 import random
 import bcrypt as bp
 
-from extensions import db
-from models.teacher import Teacher
-from models.Administration import Admin
+from shared import db,login_required
+from shared.models import Teacher,Admin
 from app.services.create_account_service import create_account
-from decorators import login_required
-from config import dict_details,administrator1
+from shared.config import dict_details,administrator1
 from app.services.email_service import email
 
 pages_bp = Blueprint("pages", __name__)

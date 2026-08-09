@@ -3,11 +3,10 @@ import random
 from datetime import timedelta
 import bcrypt as bp
 
-from werkzeug.security import generate_password_hash, check_password_hash
-from models.Administration import Admin
+from shared.models import Admin
 from app.services.create_account_service import create_account
 from app.services.email_service import email
-from config import dict_details,administrator1,administrator2
+from shared.config import dict_details,administrator1,administrator2
 
 auth_bp = Blueprint("auth", __name__)
 

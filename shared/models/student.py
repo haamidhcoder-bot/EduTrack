@@ -1,4 +1,4 @@
-from extensions import db
+from shared.extensions import db
 from datetime import date
 
 class Student(db.Model):

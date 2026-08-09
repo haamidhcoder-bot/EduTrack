@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-from app.models import Exam, Mark, Student
+from shared.models import Exam, Mark
 
 
 def generate_graph(roll_no, subject, exam_id, class_value, sec):

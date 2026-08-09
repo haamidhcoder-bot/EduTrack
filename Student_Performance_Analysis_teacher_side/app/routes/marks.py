@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app
 
-from extensions import db
-from models import Mark
-from decorators import login_required
+from shared.extensions import db
+from shared.models import Mark
+from shared.decorators import login_required
 
 marks_bp = Blueprint("marks", __name__)
 

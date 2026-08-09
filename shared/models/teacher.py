@@ -1,4 +1,4 @@
-from extensions import db
+from shared.extensions import db
 
 
 class Teacher(db.Model):
