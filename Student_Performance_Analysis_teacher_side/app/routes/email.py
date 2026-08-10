@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, session, jsonify, current
 from shared.config import dict_details
 from shared.models import Student, Exam, Mark
 from app.services.email_service import email
-from shared.decorators import login_required, class_teacher_required
+from shared import login_required,teacher_can_access_student
 
 email_bp = Blueprint("email", __name__)
 

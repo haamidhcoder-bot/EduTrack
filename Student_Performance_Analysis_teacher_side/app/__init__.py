@@ -14,7 +14,7 @@ from datetime import timedelta
 
 from shared.config import Mysql_pass, session_key1
 from shared import db
-from app.utils.logger import setup_logger
+from shared.utils.logger import setup_logger
 from app.routes import register_blueprints
 
 # Project root (one level above the app/ package), so templates/ and

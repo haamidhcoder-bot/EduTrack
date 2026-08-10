@@ -28,39 +28,6 @@ def home():
             students=students
         )
 
-
-
-@home_bp.route("/refresh", methods=["GET", "POST"], endpoint="refresh")
-@login_required
-def refresh():
-    if request.method == "POST":
-        class_input = request.form.get("class", "").strip()
-        if class_input:
-            try:
-                class_input = int(class_input)
-            except ValueError:
-                return render_template("Error.html",data="invalid class value", location="/home")
-            students_exist = Student.query.filter(Student.student_class == class_input).first()
-            if not students_exist:
-                current_app.logger.error("No matching students found")
-                return render_template("Error.html",data="No matching students found", location="/home")
-            session["class_value"] = class_input
-
-        class_value = session.get("class_value")
-        if class_value is None:
-                return render_template("Error.html",data="select a class first", location="/home")
-
-        sec = request.form.get("section", "").strip() or session.get("sec", "")
-        session["sec"] = sec
-
-        return render_template(
-            "Home.html",
-            class_value=class_value,
-            sec=sec
-        )
-
-    return redirect("/home")
-
 @home_bp.route("/show_students", methods=["GET", "POST"], endpoint="show_students")
 @login_required
 def show_students():
