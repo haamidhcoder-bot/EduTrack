@@ -1,6 +1,9 @@
 try:
+    import os, sys
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from datetime import date, timedelta
     import random
+    from shared.config import Mysql_pass
     import mysql.connector as sql
     from person_names_720 import person_names
 
@@ -10,7 +13,7 @@ try:
     DB_CONFIG = {
         "host": "127.0.0.1",
         "user": "root",
-        "password": "pass12345",
+        "password": Mysql_pass,
         }
 
     conn = sql.connect(**DB_CONFIG)
