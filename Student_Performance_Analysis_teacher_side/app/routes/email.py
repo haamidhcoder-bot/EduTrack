@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, session, jsonify, current
 from shared.config import dict_details
 from shared.models import Student, Exam, Mark
 from app.services.email_service import email
-from shared.decorators import login_required
+from shared.decorators import login_required, class_teacher_required
 
 email_bp = Blueprint("email", __name__)
 
@@ -59,8 +59,11 @@ def send_results():
     exam = Exam.query.filter(Exam.exam_name == exa).first()
     res = []
     if exam is not None:
-        res = Mark.query.filter(
+        res = Mark.query.join(
+            Student, Student.roll_no == Mark.roll_no
+        ).filter(
             Mark.student_class == class_value,
+            Student.section == sec,
             Mark.exam_id == exam.exam_id,
             Mark.subject == sub
         ).all()

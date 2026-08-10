@@ -79,20 +79,24 @@ def add_teacher():
             class_teacher_sec=request.form.get("class_teacher_sec","").strip()
             confirm_password = request.form.get("confirm_password", "").strip()
 
+            teacher=Teacher.query.filter(Teacher.class_teacher==class_teacher,
+                                  Teacher.class_teacher_sec==class_teacher_sec
+                                  ).first()
+            
             if not username or not password or not confirm_password:
                 return render_template("Error.html", data="Please fill in all fields.",location="/")
 
-            if class_teacher and class_teacher_sec:
+            if not teacher:
                 verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec)
+
+                if not verification:
+                    return render_template("Error.html", data="duplicate entry.",location="/add_teacher")
+
+                if  verification=="pass":
+                    return render_template("Error.html", data="passwords are not same.",location="/home")
+
+                if verification:
+                    return redirect("/teachers_data")
             else:
-                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher)
-
-            if not verification:
-                return render_template("Error.html", data="duplicate entry.",location="/")
-
-            if  verification=="pass":
-                return render_template("Error.html", data="passwords are not same.",location="/home")
-
-            if verification:
-                return redirect("/teachers_data")
+                return render_template("Error.html", data="duplicate entry.",location="/add_teacher")
         return render_template("add_teacher.html")

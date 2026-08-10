@@ -128,28 +128,14 @@
 <div class="container">
     <form action="/show_results" method="POST">
       <div class="card">
-          <div class="field" style="float: right;">
-              <button type="submit" style="margin-top:0;border-radius: 50% / 50%;" formaction="/refresh">⟳</button>
-          </div>
           <div style="display:flex; align-items:center; justify-content:space-between;">
               <h2 style="margin-bottom:0;">
-                  {% if class_value %}Class {{ class_value }}{% if sec %} - Section {{ sec }}{% endif %} results{% else %}Select a class{% endif %}
+                  {% if class_value %}Class {{ class_value }}{% if sec %} - Section {{ sec }}{% endif %}{% endif %}
             </h2>
         </div>
 
         <div class="filter-bar">
-            <div class="field">
-                <label for="class">Class</label>
-                <input type="number" name="class" id="class" placeholder="Enter class" min="1" max="12" value="{{ class_value or 1 }}">
-            </div>
-            <div class="field">
-                <label for="sec">Section</label>
-            <select name="section" id="sec">
-                <option value="A" {% if sec == "A" %}selected{% endif %}>A</option>
-                <option value="B" {% if sec == "B" %}selected{% endif %}>B</option>
-                <option value="C" {% if sec == "C" %}selected{% endif %}>C</option>
-            </select>
-        </div>
+
         {% if class_value and class_value >= 10 %}
 
         <div class="field">

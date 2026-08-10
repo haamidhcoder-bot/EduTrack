@@ -8,45 +8,44 @@ auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/", methods=["POST", "GET"], endpoint="login_page")
 def login_page():
-    if request.method == "POST" and not session.permanent:
-        user_n = request.form.get("username", "")
-        pass_n =request.form.get("password", "")
-        session["username"] = user_n
+    if request.method == "POST":
+        user_n = request.form.get("username", "").strip()
+        pass_n = request.form.get("password", "")
         remember = request.form.get("remember", "")
-        teachers = Teacher.query.filter(
-            Teacher.Gmail == user_n
-        ).first()
 
-        if teachers and bp.checkpw(pass_n.encode(),teachers.password.encode()):
-            session["logged_in"] = True
-            session["class_teacher"] = teachers.class_teacher
-            if remember:
-                session.permanent = True
-            current_app.logger.info(f"{session.get('username', '')} logged in")
-            return render_template(
-                "Home.html",
-                class_value=int(session.get("class_value", 0)),
-                sub="",
-                sec=session.get("sec", "")
-            )
-        else:
+        teacher = Teacher.query.filter(Teacher.Gmail == user_n).first()
+
+        if not teacher or not bp.checkpw(pass_n.encode(), teacher.password.encode()):
             current_app.logger.error("incorrect username or password")
-            return render_template("Error.html", data=" incorrect username or password", location="/")
-    elif session.permanent:
-        current_app.logger.info(f"{session.get('username', '')} logged in back")
-        return render_template(
-            "Home.html",
-            class_value=int(session.get("class_value", 0)),
-            sub="",
-            sec=session.get("sec", ""),
-            log=session.get("logged_in", ""),
-            user=session.get("username", "")
+            return render_template(
+                "Error.html",
+                data="incorrect username or password",
+                location="/"
+            )
+
+        # Start a clean teacher session after successful authentication.
+        session.clear()
+        session["username"] = user_n
+        session["logged_in"] = True
+        session["class_teacher"] = teacher.class_teacher
+        session["class_teacher_sec"] = teacher.class_teacher_sec
+
+        if remember:
+            session.permanent = True
+
+        current_app.logger.info(
+            f"{user_n} logged in"
         )
+
+        return redirect(url_for("home.home"))
+
     return render_template("login_page.html")
 
 
 @auth_bp.route("/log-out", methods=["POST", "GET"])
 def log_out():
-    current_app.logger.info(f"{session.get('username', '')} has logged out")
+    current_app.logger.info(
+        f"{session.get('username', '')} has logged out"
+    )
     session.clear()
     return redirect(url_for("auth.login_page"))

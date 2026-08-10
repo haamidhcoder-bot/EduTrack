@@ -1,47 +1,78 @@
-from flask import Blueprint, render_template, redirect, request, session, current_app
+from flask import Blueprint, render_template, request, session, url_for,redirect
 from sqlalchemy import func
 
 from shared.extensions import db
 from shared.models import Student, Exam, Mark
-from shared.decorators import login_required
+from shared.decorators import login_required, class_teacher_required
+
 home_bp = Blueprint("home", __name__)
 
 
-@home_bp.route("/home", endpoint="home", strict_slashes=False)
-@login_required
-def home():
-    class_value = int(session.get("class_value", 0)) or None
-    sec = session.get("sec", "")
-    sub = session.get("subject", "")
-    exa = session.get("exam", "")
+def _teacher_class_context():
+    class_value = session.get("class_teacher")
+    sec = session.get("class_teacher_sec")
 
-    if not class_value:
-        return render_template("Home.html", class_value=None, sub="", sec="", exam="")
+    if class_value is None or not sec:
+        return None, None
 
+    return int(class_value), sec
+
+
+def _load_results(class_value, sec, subject, exam_name):
     students = Student.query.filter(
         Student.student_class == class_value,
         Student.section == sec
     ).all()
 
-    exam = Exam.query.filter(Exam.exam_name == exa).first() if exa else None
-    res = []
-    if exam is not None and sub and exa:
-        res = Mark.query.filter(
+    exam = Exam.query.filter(Exam.exam_name == exam_name).first() if exam_name else None
+
+    results = []
+    if exam is not None and subject and subject != "All":
+        results = Mark.query.join(
+            Student, Student.roll_no == Mark.roll_no
+        ).filter(
             Mark.student_class == class_value,
+            Student.section == sec,
             Mark.exam_id == exam.exam_id,
-            Mark.subject == sub
+            Mark.subject == subject
         ).all()
+
+    return students, exam, results
+
+
+@home_bp.route("/home", endpoint="home", strict_slashes=False)
+@login_required
+@class_teacher_required
+def home():
+    class_value, sec = _teacher_class_context()
+    if class_value is None:
+        return render_template(
+            "Error.html",
+            data="No class-teacher assignment found.",
+            location="/"
+        )
+
+    sub = session.get("subject", "")
+    exa = session.get("exam", "")
+
+    students, exam, results = _load_results(
+        class_value, sec, sub, exa
+    )
 
     if sub == "All" and exam is not None:
         totals = db.session.query(
             Mark.roll_no,
             func.sum(Mark.marks).label("total")
+        ).join(
+            Student, Student.roll_no == Mark.roll_no
         ).filter(
             Mark.student_class == class_value,
+            Student.section == sec,
             Mark.exam_id == exam.exam_id
         ).group_by(Mark.roll_no).all()
 
         total_marks = {row.roll_no: row.total for row in totals}
+
         return render_template(
             "Home.html",
             class_value=class_value,
@@ -57,166 +88,41 @@ def home():
         "Home.html",
         class_value=class_value,
         students=students,
-        results=res,
+        results=results,
         sub=sub,
         exam=exa,
         sec=sec
     )
 
 
-@home_bp.route("/refresh", methods=["GET", "POST"], endpoint="refresh")
+@home_bp.route("/show_results", methods=["POST"], endpoint="show_results")
 @login_required
-def refresh():
-    if request.method == "POST":
-        class_input = request.form.get("class", "").strip()
-        if class_input:
-            try:
-                class_input = int(class_input)
-            except ValueError:
-                return render_template("Error.html",data="invalid class value", location="/home")
-            students_exist = Student.query.filter(Student.student_class == class_input).first()
-            if not students_exist:
-                current_app.logger.error("No matching students found")
-                return render_template("Error.html",data="No matching students found", location="/home")
-            session["class_value"] = class_input
+@class_teacher_required
+def show_results():
+    class_value, sec = _teacher_class_context()
 
-        class_value = session.get("class_value")
-        if class_value is None:
-                return render_template("Error.html",data="select a class first", location="/home")
-
-        sec = request.form.get("section", "").strip() or session.get("sec", "")
-        session["sec"] = sec
-        sub = request.form.get("subject10", "") or request.form.get("subject12", "")
-        exa = request.form.get("exam", "") 
-        students = Student.query.filter(
-            Student.student_class == class_value,
-            Student.section == sec
-        ).all()
-
-        exam = Exam.query.filter(Exam.exam_name == exa).first() if exa else None
-        res = []
-        if exam is not None and sub and exa:
-            res = Mark.query.filter(
-                Mark.student_class == class_value,
-                Mark.exam_id == exam.exam_id,
-                Mark.subject == sub
-            ).all()
-
-        if sub == "All" and exam is not None:
-            totals = db.session.query(
-                Mark.roll_no,
-                func.sum(Mark.marks).label("total")
-            ).filter(
-                Mark.student_class == class_value,
-                Mark.exam_id == exam.exam_id
-            ).group_by(Mark.roll_no).all()
-
-            total_marks = {row.roll_no: row.total for row in totals}
-            return render_template(
-                "Home.html",
-                class_value=class_value,
-                students=students,
-                total_marks=total_marks,
-                sub=sub,
-                exam=exa,
-                exam_id=exam.exam_id,
-                sec=sec
-            )
-
-        if sub and exa:
-            return render_template(
-                "Home.html",
-                class_value=class_value,
-                students=students,
-                results=res,
-                sub=sub,
-                exam=exa,
-                sec=sec
-            )
-
-        # Class was (re)selected but no subject/exam picked yet - show the
-        # empty state instead of erroring, since class selection now shares
-        # this same form.
+    if class_value is None:
         return render_template(
-            "Home.html",
-            class_value=class_value,
-            sub="",
-            sec=sec
+            "Error.html",
+            data="No class-teacher assignment found.",
+            location="/home"
         )
 
-    return redirect("/home")
+    sub = request.form.get("subject10", "") or request.form.get("subject12", "")
+    exa = request.form.get("exam", "")
 
-@home_bp.route("/show_results", methods=["GET", "POST"], endpoint="show_results")
-@login_required
-def show_results():
-    if request.method == "POST":
-        class_input = request.form.get("class", "").strip()
-        if class_input:
-            try:
-                class_input = int(class_input)
-            except ValueError:
-                return render_template("Error.html",data="invalid class value", location="/home")
-            students_exist = Student.query.filter(Student.student_class == class_input).first()
-            if not students_exist:
-                current_app.logger.error("No matching students found")
-                return render_template("Error.html",data="No matching students found", location="/home")
-            session["class_value"] = class_input
+    if not sub or not exa:
+        return render_template(
+            "Error.html",
+            data="Select the subject and exam.",
+            location="/home"
+        )
 
-        class_value = session.get("class_value")
-        if class_value is None:
-                return render_template("Error.html",data="select a class first", location="/home")
+    # The class and section are deliberately NOT read from the form.
+    # They always come from the logged-in teacher's assignment.
+    session["class_value"] = class_value
+    session["sec"] = sec
+    session["subject"] = sub
+    session["exam"] = exa
 
-        sec = request.form.get("section", "").strip() or session.get("sec", "")
-        session["sec"] = sec
-        sub = request.form.get("subject10", "") or request.form.get("subject12", "")
-        exa = request.form.get("exam", "") 
-        students = Student.query.filter(
-            Student.student_class == class_value,
-            Student.section == sec
-        ).all()
-
-        exam = Exam.query.filter(Exam.exam_name == exa).first() if exa else None
-        res = []
-        if exam is not None and sub and exa:
-            res = Mark.query.filter(
-                Mark.student_class == class_value,
-                Mark.exam_id == exam.exam_id,
-                Mark.subject == sub
-            ).all()
-
-        if sub == "All" and exam is not None:
-            totals = db.session.query(
-                Mark.roll_no,
-                func.sum(Mark.marks).label("total")
-            ).filter(
-                Mark.student_class == class_value,
-                Mark.exam_id == exam.exam_id
-            ).group_by(Mark.roll_no).all()
-
-            total_marks = {row.roll_no: row.total for row in totals}
-            return render_template(
-                "Home.html",
-                class_value=class_value,
-                students=students,
-                total_marks=total_marks,
-                sub=sub,
-                exam=exa,
-                exam_id=exam.exam_id,
-                sec=sec
-            )
-
-        if sub and exa :
-            session["class_value"],session["subject"],session["sec"],session["exam"] = class_input,sub,sec,exa
-            return render_template(
-                "Home.html",
-                class_value=class_value,
-                students=students,
-                results=res,
-                sub=sub,
-                exam=exa,
-                sec=sec
-            )
-        else:
-            return render_template("Error.html",data="select the subject and exam",location="/home")
-
-    return redirect("/home")
+    return redirect(url_for("home.home"))

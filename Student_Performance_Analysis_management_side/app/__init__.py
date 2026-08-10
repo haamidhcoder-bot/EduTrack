@@ -4,7 +4,7 @@ from flask import Flask
 import mysql.connector as sql
 from datetime import timedelta
 
-from shared.config import Mysql_pass, session_key
+from shared.config import Mysql_pass, session_key2
 from shared import db
 from utils.logger import setup_logger
 from app.routes import register_blueprints
@@ -28,7 +28,7 @@ def create_app():
         static_folder=os.path.join(BASE_DIR, "static")
     )
 
-    app.secret_key = session_key  # required for sessions to work
+    app.secret_key = session_key2  # required for sessions to work
     app.permanent_session_lifetime = timedelta(hours=1)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = (

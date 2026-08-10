@@ -4,7 +4,6 @@ from .marks import marks_bp
 from .reports import reports_bp
 from .email import email_bp
 from .pages import pages_bp
-from .attendance import attendance_bp
 
 
 def register_blueprints(app):
@@ -14,4 +13,3 @@ def register_blueprints(app):
     app.register_blueprint(reports_bp)
     app.register_blueprint(email_bp)
     app.register_blueprint(pages_bp)
-    app.register_blueprint(attendance_bp)

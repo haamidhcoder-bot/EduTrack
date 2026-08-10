@@ -10,16 +10,13 @@
         <div class="card">
 
             <div style="display:flex; align-items:center; justify-content:space-between;">
-                <h2 style="margin-bottom:0;">{% if class_value %}Class {{ class_value }} Leaderboard{% else %}Select a class{% endif %}</h2>
+                <h2 style="margin-bottom:0;">
+                    Class {{ class_value }}{% if sec %} - Section {{ sec }}{% endif %} Leaderboard
+                </h2>
             </div>
 
             <div class="filter-bar">
-                <div class="field">
-                    <label for="class">Class</label>
-                    <input type="number" name="class" id="class" placeholder="Enter class" min="1" max="12" value="{{ class_value or '' }}">
-                </div>
-
-                <div class="field">
+<div class="field">
                     <label for="exam">Exam</label>
                     <select name="exam" id="exam" >
                         <option value="">Select Exam</option>
@@ -59,9 +56,7 @@
             </div>
             {% endif %}
 
-            {% if not class_value %}
-            <h4>Enter a class above to view its leaderboard.</h4>
-            {% elif sub == "All" %}
+            {% if sub == "All" and class_value %}
             <h4>{{ exam }}</h4>
             <table>
                 <thead>
