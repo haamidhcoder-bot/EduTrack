@@ -5,7 +5,7 @@ import bcrypt as bp
 from shared.extensions import db
 from shared.models import Teacher
 from shared.config import dict_details,administrator1
-from app.services.email_service import email
+from shared.services.email_service import email
 
 pages_bp = Blueprint("pages", __name__)
 

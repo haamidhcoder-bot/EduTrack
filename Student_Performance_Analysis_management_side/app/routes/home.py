@@ -4,6 +4,7 @@ import bcrypt as bp
 
 from shared import db,login_required
 from shared.models import Student,Teacher
+from shared.services.export_service import export_csv
 
 home_bp = Blueprint("home", __name__)
 
@@ -115,3 +116,12 @@ def edit_teacher(Gmail: str):
         # create a new task
     else:
         return render_template("edit_teacher.html", teacher=teacher)
+
+@home_bp.route("/export_csv", methods=["GET", "POST"])
+@login_required
+def export():
+    if request.method == "POST":
+        class_input = request.form.get("class", "").strip()
+        sec = request.form.get("section", "").strip() or session.get("sec", "")
+        export_csv(class_value=class_input,sec=sec)
+        return redirect("/home")

@@ -108,6 +108,16 @@
               <h2 style="margin-bottom:0;">
                   {% if class_value %}Class {{ class_value }}{% if sec %} - Section {{ sec }}{% endif %} {% else %}Select a class{% endif %}
             </h2>
+            <button type="submit" formaction="/export_csv" class="export-csv-btn" style="display:flex; align-items:center; gap:6px; margin-top:0;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <line x1="10" y1="9" x2="8" y2="9"/>
+                </svg>
+                Export CSV
+            </button>
         </div>
 
         <div class="filter-bar">
@@ -131,16 +141,16 @@
                 Show Students
             </button>
         </div>
-        </div>
 
-        {% if not class_value and not sec%}
-        <h4>Enter a class above to get started.</h4>
-        {% elif log1 %}
+      
+      {% if not class_value and not sec%}
+      <h4>Enter a class above to get started.</h4>
+      {% elif log1 %}
         <div class="table-toolbar">
             <input type="text" id="searchSub" class="table-search" placeholder="Search by name, roll no, marks, or result" oninput="filterTable('tableSub','searchSub')">
             <div class="sort-controls">
                 <select id="sortKeySub">
-                    <option value="roll">Sort by roll no</option>
+                  <option value="roll">Sort by roll no</option>
 
                 </select>
                 <button type="button" class="sort-btn" id="sortBtnSub" onclick="sortTable('tableSub','sortKeySub','sortBtnSub')">
@@ -150,26 +160,26 @@
             </div>
         </div>
         <table id="tableSub">
-            <thead>
-                <tr>
-                    <th>Roll no</th>
-                    <th>Student name</th>
-                    <th>Date of birth</th>
-                    <th>Mobile no</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+          <thead>
+            <tr>
+              <th>Roll no</th>
+              <th>Student name</th>
+              <th>Date of birth</th>
+              <th>Mobile no</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
                 {% for stu in students %}
                     <tr data-roll="{{ stu.roll_no }}"  data-name="{{ stu.student_name|lower }}">
-                        <td data-label="Roll no" >{{ stu.roll_no }}</td>
-                        <td data-label="Student name" >{{ stu.student_name }}</td>
-                        <td data-label="Student DOB" >{{ stu.DOB }}</td>
-                        <td data-label="Student mobile" >{{ stu.mobile_no }}</td>
-                        <td data-label="Actions" class="actions">
-                            <a href="/edit/{{stu.roll_no}}">Edit</a>
+                      <td data-label="Roll no" >{{ stu.roll_no }}</td>
+                      <td data-label="Student name" >{{ stu.student_name }}</td>
+                      <td data-label="Student DOB" >{{ stu.DOB }}</td>
+                      <td data-label="Student mobile" >{{ stu.mobile_no }}</td>
+                      <td data-label="Actions" class="actions">
+                        <a href="/edit/{{stu.roll_no}}">Edit</a>
                         </td>
-                    </tr>
+                      </tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -178,6 +188,7 @@
         {% endif %}
       </div>
     </form>
+    </div>
     </div>
     <script>
       function filterTable(tableId, searchId) {

@@ -3,8 +3,8 @@ import random
 import bcrypt as bp
 
 from shared.models import Admin
-from app.services.create_account_service import create_account
-from app.services.email_service import email
+from shared.services.create_account_service import create_account
+from shared.services.email_service import email
 from shared.config import dict_details,administrator1,administrator2
 
 auth_bp = Blueprint("auth", __name__)

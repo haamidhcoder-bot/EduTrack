@@ -266,9 +266,9 @@
                 <div class="selector-field">
                     <label for="sec">Section</label>
                     <select id="sec" name="sec">
-                        {% for letter in ["A", "B", "C"] %}
-                        <option value="{{ letter }}" {% if sec == letter %}selected{% endif %}>{{ letter }}</option>
-                        {% endfor %}
+                        <option value="A" {% if sec == "A" %}selected{% endif %}>A</option>
+                        <option value="B" {% if sec == "B" %}selected{% endif %}>B</option>
+                        <option value="C" {% if sec == "C" %}selected{% endif %}>C</option>
                     </select>
                 </div>
                 <button type="submit" class="selector-submit">Show Students</button>

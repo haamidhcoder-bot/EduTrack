@@ -46,7 +46,7 @@ def _build_attendance_context(class_value, sec, month_param):
 def attendance():
     if request.method == "POST":
         class_input = request.form.get("class", "").strip()
-        sec = request.form.get("section", "").strip() or session.get("sec", "")
+        sec =  request.form.get("sec", "").strip() or session.get("sec", "")
         session["sec"] = sec
 
         if class_input:

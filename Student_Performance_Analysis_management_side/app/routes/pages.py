@@ -4,9 +4,9 @@ import bcrypt as bp
 
 from shared import db,login_required
 from shared.models import Teacher,Admin
-from app.services.create_account_service import create_account
+from shared.services.create_account_service import create_account
 from shared.config import dict_details,administrator1
-from app.services.email_service import email
+from shared.services.email_service import email
 
 pages_bp = Blueprint("pages", __name__)
 

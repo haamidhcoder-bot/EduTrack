@@ -4,8 +4,8 @@ from datetime import date
 from flask import Blueprint, render_template, request, session, current_app
 from shared.extensions import db
 from shared.models import Attendance, Student
-from app.services.graph_service import generate_graph, generate_pie_graph
-from app.services.leaderboard_service import compute_leaderboard
+from shared.services.graph_service import generate_graph, generate_pie_graph
+from shared.services.leaderboard_service import compute_leaderboard
 from shared.decorators import login_required, class_teacher_required
 
 reports_bp = Blueprint("reports", __name__)
