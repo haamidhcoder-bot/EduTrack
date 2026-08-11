@@ -967,25 +967,17 @@ nav a:hover i {
 .email-loading-overlay {
     position: fixed;
     inset: 0;
-
     z-index: 99999;
 
     display: none;
-
     justify-content: center;
     align-items: center;
 
-    /* Teal glass overlay */
-    background: rgba(12, 55, 62, 0.48);
+    background: rgba(11, 61, 46, 0.78);
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
 
-    /*
-       This blurs YOUR existing mountain
-       background instead of replacing it.
-    */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    animation: overlayIn 0.3s ease forwards;
+    animation: overlayFadeIn 0.25s ease forwards;
 }
 
 .email-loading-overlay.active {
@@ -994,268 +986,149 @@ nav a:hover i {
 
 
 /* =========================================
-   GLASS CARD
+   CARD
    ========================================= */
 
-.email-loading-card {
-
-    width: 350px;
-
-    padding: 42px 35px 38px;
+.email-loading-box {
+    width: min(90%, 390px);
+    padding: 40px 30px;
 
     text-align: center;
 
-    border-radius: 28px;
-
-    /*
-       Matches your screenshot's
-       transparent teal card.
-    */
-    background: rgba(38, 91, 87, 0.70);
-
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: white;
+    border-radius: 22px;
 
     box-shadow:
-        0 25px 70px rgba(0, 0, 0, 0.30),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        0 20px 60px rgba(0, 0, 0, 0.25);
 
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    animation: boxAppear 0.35s ease forwards;
+}
 
-    animation: cardIn 0.45s cubic-bezier(.2,.8,.2,1);
+.email-loading-box h2 {
+    margin: 25px 0 8px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: var(--primary-dark);
+}
+
+.email-loading-box p {
+    margin: 0 auto;
+
+    max-width: 300px;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    color: var(--text-muted);
+}
+
+.email-loading-box small {
+    display: block;
+
+    margin-top: 20px;
+
+    font-size: 12px;
+
+    color: #94a3b8;
 }
 
 
 /* =========================================
-   MAIL ANIMATION
+   EMAIL ICON
    ========================================= */
 
-.mail-animation {
-
+.email-animation {
     position: relative;
 
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
 
-    margin: 0 auto 25px;
+    margin: auto;
 
     display: flex;
-
     justify-content: center;
     align-items: center;
 }
 
-
-/* Soft glow */
-
-.mail-glow {
-
-    position: absolute;
-
-    width: 70px;
-    height: 70px;
-
-    border-radius: 50%;
-
-    background: rgba(190, 230, 222, 0.22);
-
-    filter: blur(10px);
-
-    animation: glowPulse 2s ease-in-out infinite;
-}
-
-
-/* Envelope */
-
-.mail-icon {
-
+.email-icon {
     position: relative;
-
-    width: 62px;
-    height: 45px;
-
     z-index: 2;
 
-    filter:
-        drop-shadow(0 8px 12px rgba(0,0,0,.25));
+    width: 65px;
+    height: 65px;
 
-    animation: mailFloat 2s ease-in-out infinite;
-}
-
-
-/* Envelope body */
-
-.mail-body {
-
-    position: absolute;
-
-    inset: 0;
-
-    border-radius: 6px;
-
-    background: rgba(230, 248, 244, 0.95);
-
-    border: 2px solid rgba(255,255,255,.8);
-
-}
-
-
-/* Envelope flap */
-
-.mail-flap {
-
-    position: absolute;
-
-    top: 4px;
-    left: 8px;
-
-    width: 42px;
-    height: 42px;
-
-    border-left: 2px solid rgba(38,91,87,.75);
-    border-bottom: 2px solid rgba(38,91,87,.75);
-
-    transform: rotate(-45deg) scale(.72);
-
-    transform-origin: center;
-
-}
-
-
-/* =========================================
-   ORBITING DOTS
-   ========================================= */
-
-.orbit-dot {
-
-    position: absolute;
-
-    width: 7px;
-    height: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     border-radius: 50%;
 
-    background: rgba(220, 245, 240, 0.9);
+    background: var(--primary);
 
-    box-shadow:
-        0 0 10px rgba(210,245,240,.7);
+    box-shadow: 0 8px 25px rgba(27, 94, 59, 0.4);
+
+    animation: emailPulse 1.5s ease-in-out infinite;
 }
 
-
-/* Top */
-
-.dot-1 {
-
-    top: 4px;
-    left: 47px;
-
-    animation:
-        orbitTop 1.8s ease-in-out infinite;
-}
-
-
-/* Right */
-
-.dot-2 {
-
-    right: 4px;
-    top: 47px;
-
-    animation:
-        orbitRight 1.8s ease-in-out infinite;
-}
-
-
-/* Bottom */
-
-.dot-3 {
-
-    bottom: 4px;
-    left: 47px;
-
-    animation:
-        orbitBottom 1.8s ease-in-out infinite;
+.email-icon svg {
+    width: 30px;
+    height: 30px;
 }
 
 
 /* =========================================
-   TEXT
+   ROTATING RING
    ========================================= */
 
-.email-loading-card h2 {
+.email-ring {
+    position: absolute;
 
-    margin: 0 0 10px;
+    width: 85px;
+    height: 85px;
 
-    color: #ffffff;
+    border-radius: 50%;
 
-    font-size: 25px;
+    border: 3px solid transparent;
+    border-top-color: var(--primary);
+    border-right-color: var(--primary-light);
 
-    font-weight: 700;
-
-    letter-spacing: .3px;
-}
-
-
-.email-loading-card p {
-
-    margin: 0;
-
-    color: rgba(255,255,255,.78);
-
-    font-size: 14px;
-
-    line-height: 1.7;
+    animation: ringRotate 1s linear infinite;
 }
 
 
 /* =========================================
-   THREE DOT LOADER
+   LOADING DOTS
    ========================================= */
 
 .loading-dots {
+    margin-top: 20px;
 
     display: flex;
-
     justify-content: center;
+    align-items: center;
 
-    gap: 7px;
-
-    margin-top: 20px;
+    gap: 6px;
 }
 
-
 .loading-dots span {
-
     width: 7px;
     height: 7px;
 
     border-radius: 50%;
 
-    background: #d9efea;
+    background: var(--primary);
 
     animation: dotBounce 1.2s infinite ease-in-out;
 }
 
-
 .loading-dots span:nth-child(2) {
-    animation-delay: .15s;
+    animation-delay: 0.15s;
 }
-
 
 .loading-dots span:nth-child(3) {
-    animation-delay: .30s;
-}
-
-
-.email-loading-card small {
-
-    display: block;
-
-    margin-top: 18px;
-
-    color: rgba(255,255,255,.48);
-
-    font-size: 11px;
+    animation-delay: 0.3s;
 }
 
 
@@ -1263,109 +1136,56 @@ nav a:hover i {
    ANIMATIONS
    ========================================= */
 
-@keyframes overlayIn {
-
+@keyframes ringRotate {
     from {
-        opacity: 0;
+        transform: rotate(0deg);
     }
 
     to {
-        opacity: 1;
+        transform: rotate(360deg);
     }
 }
 
-
-@keyframes cardIn {
-
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(.94);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-
-@keyframes mailFloat {
-
+@keyframes emailPulse {
     0%, 100% {
-        transform: translateY(0) rotate(0deg);
+        transform: scale(1);
     }
 
     50% {
-        transform: translateY(-7px) rotate(-2deg);
+        transform: scale(1.08);
     }
 }
-
-
-@keyframes glowPulse {
-
-    0%, 100% {
-        transform: scale(.85);
-        opacity: .45;
-    }
-
-    50% {
-        transform: scale(1.15);
-        opacity: .8;
-    }
-}
-
-
-@keyframes orbitTop {
-
-    0%, 100% {
-        transform: translateY(0);
-        opacity: .4;
-    }
-
-    50% {
-        transform: translateY(-8px);
-        opacity: 1;
-    }
-}
-
-
-@keyframes orbitRight {
-
-    0%, 100% {
-        transform: translateX(0);
-        opacity: .4;
-    }
-
-    50% {
-        transform: translateX(8px);
-        opacity: 1;
-    }
-}
-
-
-@keyframes orbitBottom {
-
-    0%, 100% {
-        transform: translateY(0);
-        opacity: .4;
-    }
-
-    50% {
-        transform: translateY(8px);
-        opacity: 1;
-    }
-}
-
 
 @keyframes dotBounce {
-
     0%, 60%, 100% {
         transform: translateY(0);
-        opacity: .4;
+        opacity: 0.45;
     }
 
     30% {
         transform: translateY(-6px);
         opacity: 1;
+    }
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes boxAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
