@@ -4,7 +4,7 @@ import bcrypt as bp
 
 from shared import db,login_required
 from shared.models import Student,Teacher
-from shared.services.export_service import export_csv
+from shared.services.export_service import export_csv,import_csv
 
 home_bp = Blueprint("home", __name__)
 
@@ -125,3 +125,30 @@ def export():
         sec = request.form.get("section", "").strip() or session.get("sec", "")
         export_csv(class_value=class_input,sec=sec)
         return redirect("/home")
+
+@home_bp.route("/import_csv", methods=["GET", "POST"])
+@login_required
+def import_file():
+    if request.method == "POST":
+        class_input = request.form.get("class", "").strip()
+        sec = request.form.get("section", "").strip() or session.get("sec", "")
+        csv_file = request.files.get("csv_file")
+
+        if not csv_file or csv_file.filename == "":
+            return render_template("Error.html", data="Please choose a CSV file to upload.", location="/import_csv")
+
+        if not csv_file.filename.lower().endswith(".csv"):
+            return render_template("Error.html", data="Only .csv files are supported.", location="/import_csv")
+
+        try:
+            added, updated = import_csv(csv_file.stream, class_value=class_input, sec=sec)
+        except Exception as e:
+            current_app.logger.error(f"CSV import failed: {e}")
+            return render_template("Error.html", data="Could not import that file. Check it matches the expected format.", location="/import_csv")
+
+        current_app.logger.info(f"{session.get('username', '')} imported a CSV: {added} added, {updated} updated")
+        return redirect("/home")
+
+    class_value = request.args.get("class", session.get("class_value", ""))
+    sec = request.args.get("section", session.get("sec", ""))
+    return render_template("import_csv.html", class_value=class_value, sec=sec)
