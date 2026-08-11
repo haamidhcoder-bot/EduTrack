@@ -910,3 +910,232 @@ nav a:hover i {
   20% { opacity: 1; }
   100% { opacity: .2; }
 }
+
+/* ==============================
+   EMAIL LOADING OVERLAY
+   ============================== */
+
+.email-loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(7, 25, 55, 0.82);
+    backdrop-filter: blur(7px);
+
+    animation: overlayFadeIn 0.25s ease forwards;
+}
+
+.email-loading-overlay.active {
+    display: flex;
+}
+
+.email-loading-box {
+    width: min(90%, 390px);
+    padding: 40px 30px;
+
+    text-align: center;
+
+    background: white;
+    border-radius: 22px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.25);
+
+    animation: boxAppear 0.35s ease forwards;
+}
+
+.email-loading-box h2 {
+    margin: 25px 0 8px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: #123b70;
+}
+
+.email-loading-box p {
+    margin: 0 auto;
+
+    max-width: 300px;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    color: #64748b;
+}
+
+.email-loading-box small {
+    display: block;
+
+    margin-top: 20px;
+
+    font-size: 12px;
+
+    color: #94a3b8;
+}
+
+
+/* ==============================
+   EMAIL ICON
+   ============================== */
+
+.email-animation {
+    position: relative;
+
+    width: 90px;
+    height: 90px;
+
+    margin: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.email-icon {
+    position: relative;
+    z-index: 2;
+
+    width: 65px;
+    height: 65px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35);
+
+    animation: emailPulse 1.5s ease-in-out infinite;
+}
+
+.email-icon span {
+    color: white;
+
+    font-size: 31px;
+
+    line-height: 1;
+
+    transform: translateY(-1px);
+}
+
+
+/* ==============================
+   ROTATING RING
+   ============================== */
+
+.email-ring {
+    position: absolute;
+
+    width: 85px;
+    height: 85px;
+
+    border-radius: 50%;
+
+    border: 3px solid transparent;
+    border-top-color: #2563eb;
+    border-right-color: #60a5fa;
+
+    animation: ringRotate 1s linear infinite;
+}
+
+
+/* ==============================
+   LOADING DOTS
+   ============================== */
+
+.loading-dots {
+    margin-top: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 6px;
+}
+
+.loading-dots span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    animation: dotBounce 1.2s infinite ease-in-out;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+
+/* ==============================
+   ANIMATIONS
+   ============================== */
+
+@keyframes ringRotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes emailPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+@keyframes dotBounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.45;
+    }
+
+    30% {
+        transform: translateY(-6px);
+        opacity: 1;
+    }
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes boxAppear {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}

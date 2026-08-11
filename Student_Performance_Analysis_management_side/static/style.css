@@ -959,3 +959,413 @@ nav a:hover i {
   20% { opacity: 1; }
   100% { opacity: .2; }
 }
+
+/* =========================================
+   EMAIL LOADING OVERLAY
+   ========================================= */
+
+.email-loading-overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: 99999;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    /* Teal glass overlay */
+    background: rgba(12, 55, 62, 0.48);
+
+    /*
+       This blurs YOUR existing mountain
+       background instead of replacing it.
+    */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    animation: overlayIn 0.3s ease forwards;
+}
+
+.email-loading-overlay.active {
+    display: flex;
+}
+
+
+/* =========================================
+   GLASS CARD
+   ========================================= */
+
+.email-loading-card {
+
+    width: 350px;
+
+    padding: 42px 35px 38px;
+
+    text-align: center;
+
+    border-radius: 28px;
+
+    /*
+       Matches your screenshot's
+       transparent teal card.
+    */
+    background: rgba(38, 91, 87, 0.70);
+
+    border: 1px solid rgba(255, 255, 255, 0.28);
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    animation: cardIn 0.45s cubic-bezier(.2,.8,.2,1);
+}
+
+
+/* =========================================
+   MAIL ANIMATION
+   ========================================= */
+
+.mail-animation {
+
+    position: relative;
+
+    width: 100px;
+    height: 100px;
+
+    margin: 0 auto 25px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Soft glow */
+
+.mail-glow {
+
+    position: absolute;
+
+    width: 70px;
+    height: 70px;
+
+    border-radius: 50%;
+
+    background: rgba(190, 230, 222, 0.22);
+
+    filter: blur(10px);
+
+    animation: glowPulse 2s ease-in-out infinite;
+}
+
+
+/* Envelope */
+
+.mail-icon {
+
+    position: relative;
+
+    width: 62px;
+    height: 45px;
+
+    z-index: 2;
+
+    filter:
+        drop-shadow(0 8px 12px rgba(0,0,0,.25));
+
+    animation: mailFloat 2s ease-in-out infinite;
+}
+
+
+/* Envelope body */
+
+.mail-body {
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: 6px;
+
+    background: rgba(230, 248, 244, 0.95);
+
+    border: 2px solid rgba(255,255,255,.8);
+
+}
+
+
+/* Envelope flap */
+
+.mail-flap {
+
+    position: absolute;
+
+    top: 4px;
+    left: 8px;
+
+    width: 42px;
+    height: 42px;
+
+    border-left: 2px solid rgba(38,91,87,.75);
+    border-bottom: 2px solid rgba(38,91,87,.75);
+
+    transform: rotate(-45deg) scale(.72);
+
+    transform-origin: center;
+
+}
+
+
+/* =========================================
+   ORBITING DOTS
+   ========================================= */
+
+.orbit-dot {
+
+    position: absolute;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: rgba(220, 245, 240, 0.9);
+
+    box-shadow:
+        0 0 10px rgba(210,245,240,.7);
+}
+
+
+/* Top */
+
+.dot-1 {
+
+    top: 4px;
+    left: 47px;
+
+    animation:
+        orbitTop 1.8s ease-in-out infinite;
+}
+
+
+/* Right */
+
+.dot-2 {
+
+    right: 4px;
+    top: 47px;
+
+    animation:
+        orbitRight 1.8s ease-in-out infinite;
+}
+
+
+/* Bottom */
+
+.dot-3 {
+
+    bottom: 4px;
+    left: 47px;
+
+    animation:
+        orbitBottom 1.8s ease-in-out infinite;
+}
+
+
+/* =========================================
+   TEXT
+   ========================================= */
+
+.email-loading-card h2 {
+
+    margin: 0 0 10px;
+
+    color: #ffffff;
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    letter-spacing: .3px;
+}
+
+
+.email-loading-card p {
+
+    margin: 0;
+
+    color: rgba(255,255,255,.78);
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================
+   THREE DOT LOADER
+   ========================================= */
+
+.loading-dots {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 20px;
+}
+
+
+.loading-dots span {
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #d9efea;
+
+    animation: dotBounce 1.2s infinite ease-in-out;
+}
+
+
+.loading-dots span:nth-child(2) {
+    animation-delay: .15s;
+}
+
+
+.loading-dots span:nth-child(3) {
+    animation-delay: .30s;
+}
+
+
+.email-loading-card small {
+
+    display: block;
+
+    margin-top: 18px;
+
+    color: rgba(255,255,255,.48);
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   ANIMATIONS
+   ========================================= */
+
+@keyframes overlayIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+@keyframes cardIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+@keyframes mailFloat {
+
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-7px) rotate(-2deg);
+    }
+}
+
+
+@keyframes glowPulse {
+
+    0%, 100% {
+        transform: scale(.85);
+        opacity: .45;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: .8;
+    }
+}
+
+
+@keyframes orbitTop {
+
+    0%, 100% {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    50% {
+        transform: translateY(-8px);
+        opacity: 1;
+    }
+}
+
+
+@keyframes orbitRight {
+
+    0%, 100% {
+        transform: translateX(0);
+        opacity: .4;
+    }
+
+    50% {
+        transform: translateX(8px);
+        opacity: 1;
+    }
+}
+
+
+@keyframes orbitBottom {
+
+    0%, 100% {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    50% {
+        transform: translateY(8px);
+        opacity: 1;
+    }
+}
+
+
+@keyframes dotBounce {
+
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: .4;
+    }
+
+    30% {
+        transform: translateY(-6px);
+        opacity: 1;
+    }
+}
