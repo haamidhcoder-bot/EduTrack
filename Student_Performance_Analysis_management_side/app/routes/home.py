@@ -5,6 +5,7 @@ import bcrypt as bp
 from shared import db,login_required
 from shared.models import Student,Teacher
 from shared.services.export_service import export_csv,import_csv
+from shared.services.remove_service import remove_student
 
 home_bp = Blueprint("home", __name__)
 
@@ -133,17 +134,16 @@ def edit_teacher(Gmail: str):
     else:
         return render_template("edit_teacher.html", teacher=teacher)
 
-@home_bp.route("/export_csv_location", methods=["GET"])
-@login_required
-def export_location():
-    return render_template("export_location.html")
-
-
 @home_bp.route("/export_csv", methods=["GET"])
 @login_required
 def export():
-    class_input = session.get("class_value")
-    sec = session.get("sec", "")
+    class_input = request.form.get("class", "").strip() or session.get("class_value","")
+    sec = request.form.get("section", "").strip() or session.get("sec", "")
+
+    try:
+     class_input = int(class_input)
+    except ValueError:
+     return render_template("Error.html",data="invalid class value", location="/home")
 
     if not class_input:
         return render_template(
@@ -164,7 +164,12 @@ def export():
             class_value=class_input,
             sec=sec
         )
-        return redirect("/home")
+        return render_template(
+            "Home.html",
+            class_value=class_input,
+            sec=sec,
+            exp=True
+        )
     except Exception as e:
         current_app.logger.error(f"CSV export failed: {e}")
         return render_template(
@@ -199,3 +204,22 @@ def import_file():
     class_value = request.args.get("class", session.get("class_value", ""))
     sec = request.args.get("section", session.get("sec", ""))
     return render_template("import_csv.html", class_value=class_value, sec=sec)
+
+@home_bp.route("/delete/<int:roll_no>", methods=["GET", "POST"])
+@login_required
+def remove_student_page(roll_no:int):
+    remove_student(roll_no)
+    class_input = request.form.get("class", "").strip() or session.get("class_value","")
+    sec = request.form.get("section", "").strip() or session.get("sec", "")
+    students_exist = Student.query.filter(
+                Student.student_class == class_input,
+                Student.section == sec
+            ).all()
+    return render_template(
+            "Home.html",
+            class_value=class_input,
+            sec=sec,
+            remove=True,
+            students=students_exist
+        )
+

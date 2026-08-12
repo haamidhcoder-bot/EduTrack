@@ -1,6 +1,7 @@
 import csv
 import io
 import mysql.connector as sql
+import os
 
 from shared.config import Mysql_pass
 
@@ -11,17 +12,24 @@ def connect():
         password=Mysql_pass,
         database="schooldb"
     )
-    return cn
+
+    cur=cn.cursor()
+
+    return cn,cur
 
 def export_csv(class_value,sec):
-    cn=connect()
-
-    cur = cn.cursor()
+    cn,cur=connect()
 
     cur.execute("select * from students where class=%s and section like %s",(class_value,sec))
 
+
+    try:
+     os.makedirs("c:/Users/dell/Desktop/exports")
+    except Exception as e:
+     pass
+
     f = open(
-    f"C:/Users/dell/Desktop/Student_Performance_Analysis/exports/students_{class_value}-{sec}.csv",
+    f"c:/Users/dell/Desktop/exports/students_{class_value}-{sec}.csv",
     "w",
     newline="")
     csv_writer=csv.writer(f)
@@ -32,21 +40,7 @@ def export_csv(class_value,sec):
     cn.close()
 
 def import_csv(file, class_value, sec):
-    """
-    Reads a students CSV (columns: roll_no, student_name, class, section,
-    student_gmail, DOB, mobile_no — no header row, same layout export_csv
-    produces) and upserts it into the students table.
-
-    `file` is a binary file-like object, e.g. request.files['csv_file'].stream.
-    New roll numbers are inserted; roll numbers that already exist are updated.
-    Rows missing class/section fall back to the class_value/sec the form was
-    submitted with, so a plain "name, roll_no" style sheet still works for a
-    single-class import.
-
-    Returns (added, updated) counts.
-    """
-    cn = connect()
-    cur = cn.cursor()
+    cn,cur = connect()
 
     reader = csv.reader(io.TextIOWrapper(file, encoding="utf-8-sig"))
 
