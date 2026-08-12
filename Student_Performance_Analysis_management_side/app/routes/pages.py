@@ -43,7 +43,8 @@ def forgot_password():
         OTP=str(random.randint(1000,9999))
         session["OTP"]=OTP
         email(administrator1,gmail,"OTP verification",f"The OTP for {gmail} is  --{OTP}-- for changing password",dict_details[administrator1])
-        
+
+        current_app.logger.info(f"{gmail} has changed the password")
         return render_template("forgot_password_verification.html",username=gmail,password=new_password)
 
 
@@ -108,6 +109,7 @@ def add_teacher():
 
                 if verification:
                     return redirect("/teachers_data")
+                current_app.logger.info(f"{session.get("username","")} has added {username} as a teacher")
             else:
                 return render_template("Error.html", data="duplicate entry.",location="/add_teacher")
         return render_template("add_teacher.html")
@@ -203,6 +205,7 @@ def add_student():
 
         try:
             db.session.add(student)
+            current_app.logger.info(f"{session.get("username","")} has added {student_name} as a student")
             db.session.commit()
         except Exception as e:
             db.session.rollback()

@@ -1,7 +1,6 @@
 import csv
 import io
 import mysql.connector as sql
-import os
 
 from shared.config import Mysql_pass
 
@@ -17,27 +16,27 @@ def connect():
 
     return cn,cur
 
-def export_csv(class_value,sec):
-    cn,cur=connect()
+def export_csv(class_value, sec):
+    cn, cur = connect()
 
-    cur.execute("select * from students where class=%s and section like %s",(class_value,sec))
+    cur.execute(
+        "SELECT * FROM students WHERE class=%s AND section=%s",
+        (class_value, sec)
+    )
 
+    output = io.StringIO()
+    csv_writer = csv.writer(output)
 
-    try:
-     os.makedirs("c:/Users/dell/Desktop/exports")
-    except Exception as e:
-     pass
+    # Include column names
+    csv_writer.writerow([column[0] for column in cur.description])
 
-    f = open(
-    f"c:/Users/dell/Desktop/exports/students_{class_value}-{sec}.csv",
-    "w",
-    newline="")
-    csv_writer=csv.writer(f)
+    # Write student data
+    csv_writer.writerows(cur.fetchall())
 
-    for data in cur:
-        csv_writer.writerow(data)
-    f.close()
+    cur.close()
     cn.close()
+
+    return output.getvalue()
 
 def import_csv(file, class_value, sec):
     cn,cur = connect()

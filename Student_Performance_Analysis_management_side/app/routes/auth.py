@@ -9,7 +9,6 @@ from shared.config import dict_details,administrator1,administrator2
 
 auth_bp = Blueprint("auth", __name__)
 
-
 @auth_bp.route("/", methods=["POST", "GET"], endpoint="login_page")
 def login_page():
     if request.method == "POST" and not session.permanent:
@@ -68,6 +67,8 @@ def register():
         OTP=str(random.randint(1000,9999))
         session["OTP"]=OTP
         email(administrator1,administrator2,"OTP verification",f"The OTP for {username} is --{OTP}-- for registering an account",dict_details[administrator1])
+
+        current_app.logger.info(f"{username} has registered an account")
 
         return render_template("register_verification.html",username=username,password=password,confirm_password=confirm_password)
     return render_template("register.html")

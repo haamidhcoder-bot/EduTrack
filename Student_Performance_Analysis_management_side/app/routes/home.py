@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, request, session, current_app
+from flask import Blueprint, render_template, redirect, request, session, current_app,Response
 import re
 import bcrypt as bp
 
@@ -24,6 +24,9 @@ def home():
         Student.student_class == class_value,
         Student.section == sec
     ).all()
+
+    current_app.logger.info(f"{session.get("username","")} has entered home")
+
     return render_template(
             "Home.html",
             class_value=class_value,
@@ -60,6 +63,7 @@ def show_students():
             ).all()
 
         log1=True
+        current_app.logger.info(f"{session.get("username","")} is seeing the details of {class_input}-{sec}")
         return render_template(
                 "Home.html",
                 class_value=class_value,
@@ -72,6 +76,7 @@ def show_students():
 @home_bp.route("/teachers_data", methods=["GET", "POST"], endpoint="/teachers_data",)
 @login_required
 def teachers_data():
+    current_app.logger.info(f"{session.get("username","")} is seeing the details of the teachers")
     teachers=Teacher.query.all() 
     return render_template("teachers_data.html",teachers=teachers)
 
@@ -160,15 +165,17 @@ def export():
         )
 
     try:
-        export_csv(
-            class_value=class_input,
-            sec=sec
-        )
-        return render_template(
-            "Home.html",
-            class_value=class_input,
-            sec=sec,
-            exp=True
+        csv_data = export_csv(class_input, sec)
+
+        filename = f"students_{class_input}-{sec}.csv"
+
+        current_app.logger.info(f"{session.get("username","")} has exported the data of {class_input}-{sec}")
+        return Response(
+            csv_data,
+            mimetype="text/csv",
+            headers={
+                "Content-Disposition": f"attachment; filename={filename}"
+            }
         )
     except Exception as e:
         current_app.logger.error(f"CSV export failed: {e}")
@@ -194,6 +201,7 @@ def import_file():
 
         try:
             added, updated = import_csv(csv_file.stream, class_value=class_input, sec=sec)
+            
         except Exception as e:
             current_app.logger.error(f"CSV import failed: {e}")
             return render_template("Error.html", data="Could not import that file. Check it matches the expected format.", location="/import_csv")
@@ -215,6 +223,7 @@ def remove_student_page(roll_no:int):
                 Student.student_class == class_input,
                 Student.section == sec
             ).all()
+    current_app.logger.info(f"{session.get("username","")} has removed the student with roll no:{roll_no}")
     return render_template(
             "Home.html",
             class_value=class_input,

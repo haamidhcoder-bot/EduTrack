@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, url_for,redirect
+from flask import Blueprint, render_template, request, session, url_for,redirect,current_app
 from sqlalchemy import func
 
 from shared.extensions import db
@@ -83,6 +83,7 @@ def home():
             exam_id=exam.exam_id,
             sec=sec
         )
+    current_app.logger.info(f"{session.get("username","")} has entered home")
 
     return render_template(
         "Home.html",
@@ -125,4 +126,5 @@ def show_results():
     session["subject"] = sub
     session["exam"] = exa
 
+    current_app.logger.info(f"{session.get("username","")} is seeing the details of {class_value}-{sec}")
     return redirect(url_for("home.home"))
