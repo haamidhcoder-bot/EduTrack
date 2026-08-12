@@ -133,42 +133,17 @@ def edit_teacher(Gmail: str):
     else:
         return render_template("edit_teacher.html", teacher=teacher)
 
+@home_bp.route("/export_csv_location", methods=["GET"])
+@login_required
+def export_location():
+    return render_template("export_location.html")
+
+
 @home_bp.route("/export_csv", methods=["GET"])
 @login_required
 def export():
     class_input = session.get("class_value")
     sec = session.get("sec", "")
-
-    if not class_input:
-        return render_template(
-            "Error.html",
-            data="Please select a class first.",
-            location="/home"
-        )
-
-    if not sec:
-        return render_template(
-            "Error.html",
-            data="Please select a section first.",
-            location="/home"
-        )
-
-    try:
-        export_csv(
-            class_value=class_input,
-            sec=sec
-        )
-        return redirect("/home")
-    except Exception as e:
-        current_app.logger.error(f"CSV export failed: {e}")
-        return render_template(
-            "Error.html",
-            data="Could not export the student data.",
-            location="/home"
-        )
-
-    if not class_input:
-        class_input = session.get("class_value")
 
     if not class_input:
         return render_template(
