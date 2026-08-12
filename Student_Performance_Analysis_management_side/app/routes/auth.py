@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, request, session, url_for, current_app
+from flask import Blueprint, render_template, redirect, request, session, url_for, current_app, jsonify
 import random
 import bcrypt as bp
 
@@ -76,12 +76,25 @@ def register():
 @auth_bp.route("/register_verification/<username>/<password>/<confirm_password>", methods=["POST", "GET"])
 def register_verification(username: str,password:str,confirm_password:str):
         if request.method=="POST":
-            otp=request.form.get("onepass","")
+            if request.is_json:
+                data = request.get_json(silent=True) or {}
+                otp = data.get("onepass", "")
+            else:
+                otp = request.form.get("onepass", "")
+
             if otp==session.get("OTP"):
                 verified=create_account(user=username,password=password,confirm_password=confirm_password,Table=Admin)
 
                 if not verified:
+                    if request.is_json:
+                        return jsonify({"success": False, "message": "Passwords do not match."}), 400
                     return render_template("Error.html", data="Passwords do not match.",location="/")
+
+                session.pop("OTP", None)
+                if request.is_json:
+                    return jsonify({"success": True, "message": "Code verified.", "redirect": url_for("auth.login_page")})
             else:
+                if request.is_json:
+                    return jsonify({"success": False, "message": "Incorrect OTP."}), 400
                 return render_template("Error.html", data="incorrect OTP.",location="/")
         return redirect(url_for("auth.login_page"))

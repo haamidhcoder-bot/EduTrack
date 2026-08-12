@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for, current_app
+from flask import Blueprint, render_template, session, request, redirect, url_for, current_app, jsonify
 import random
 import bcrypt as bp
 
@@ -52,12 +52,22 @@ def forgot_password():
 def forgot_password_verification(username: str,password:str):
         teacher = Teacher.query.filter(Teacher.Gmail == username).first()
         if request.method=="POST":
-            otp=request.form.get("onepass","")
+            if request.is_json:
+                data = request.get_json(silent=True) or {}
+                otp = data.get("onepass", "")
+            else:
+                otp = request.form.get("onepass", "")
+
             if otp==session.get("OTP"):
                 teacher.password = bp.hashpw(password.encode(),bp.gensalt()) 
                 db.session.commit()
+                session.pop("OTP", None)
                 current_app.logger.info(f"Password reset requested for {username}")
+                if request.is_json:
+                    return jsonify({"success": True, "message": "Code verified.", "redirect": url_for("auth.login_page")})
             else:
+                if request.is_json:
+                    return jsonify({"success": False, "message": "Incorrect OTP."}), 400
                 return render_template("Error.html", data="incorrect OTP.",location="/")
         return redirect(url_for("auth.login_page"))
 
