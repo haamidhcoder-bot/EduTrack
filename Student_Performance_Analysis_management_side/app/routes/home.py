@@ -17,7 +17,7 @@ def home():
 
 
     if not class_value:
-        return render_template("Home.html", class_value=None)
+        return render_template("Home.html", class_value=None, sec=sec, students=[], log1=False)
 
     students = Student.query.filter(
         Student.student_class == class_value,
@@ -26,7 +26,8 @@ def home():
     return render_template(
             "Home.html",
             class_value=class_value,
-            students=students
+            students=students,
+            log1=True
         )
 
 @home_bp.route("/show_students", methods=["GET", "POST"], endpoint="show_students")
@@ -49,7 +50,14 @@ def show_students():
 
         class_value = session.get("class_value")
         if class_value is None:
-                return render_template("Error.html",data="select a class first", location="/home")
+            return render_template("Error.html", data="select a class first", location="/home")
+
+        if not class_input:
+            students_exist = Student.query.filter(
+                Student.student_class == class_value,
+                Student.section == sec
+            ).all()
+
         log1=True
         return render_template(
                 "Home.html",
@@ -72,6 +80,9 @@ def edit(roll_no: int):
     student = Student.query.filter(
         Student.roll_no == roll_no
     ).first()
+    if request.method == "POST" and not student:
+        return render_template("Error.html", data=f"No student found with roll number {roll_no}.", location="/home")
+
     if request.method == "POST" and student:
         DOB = request.form.get("content","")  # to get info from input box
         Mobile = request.form.get("Mobile","")
@@ -102,10 +113,15 @@ def edit_teacher(Gmail: str):
         confirm_password = request.form.get("confirm_password", "").strip()
         class_teacher=request.form.get("class_teacher","").strip()
         class_teacher_sec=request.form.get("class_teacher_sec","").strip()
-        if password==confirm_password and re.match(pattern,password):
-            teacher.password=bp.hashpw(password.encode(), bp.gensalt())
-            teacher.class_teacher=class_teacher
-            teacher.class_teacher_sec=class_teacher_sec
+        if password != confirm_password:
+            return render_template("Error.html", data="Password and confirm password do not match.", location=f"/edit_teacher/{Gmail}")
+
+        if not re.match(pattern, password):
+            return render_template("Error.html", data="Password must contain at least one lowercase letter and one number.", location=f"/edit_teacher/{Gmail}")
+
+        teacher.password=bp.hashpw(password.encode(), bp.gensalt())
+        teacher.class_teacher=class_teacher
+        teacher.class_teacher_sec=class_teacher_sec
         try:
                 current_app.logger.info(f"{session.get('username', '')} has changed password  of {Gmail}")
                 db.session.commit()  # commiting it
@@ -117,14 +133,70 @@ def edit_teacher(Gmail: str):
     else:
         return render_template("edit_teacher.html", teacher=teacher)
 
-@home_bp.route("/export_csv", methods=["GET", "POST"])
+@home_bp.route("/export_csv", methods=["GET"])
 @login_required
 def export():
-    if request.method == "POST":
-        class_input = request.form.get("class", "").strip()
-        sec = request.form.get("section", "").strip() or session.get("sec", "")
-        export_csv(class_value=class_input,sec=sec)
+    class_input = session.get("class_value")
+    sec = session.get("sec", "")
+
+    if not class_input:
+        return render_template(
+            "Error.html",
+            data="Please select a class first.",
+            location="/home"
+        )
+
+    if not sec:
+        return render_template(
+            "Error.html",
+            data="Please select a section first.",
+            location="/home"
+        )
+
+    try:
+        export_csv(
+            class_value=class_input,
+            sec=sec
+        )
         return redirect("/home")
+    except Exception as e:
+        current_app.logger.error(f"CSV export failed: {e}")
+        return render_template(
+            "Error.html",
+            data="Could not export the student data.",
+            location="/home"
+        )
+
+    if not class_input:
+        class_input = session.get("class_value")
+
+    if not class_input:
+        return render_template(
+            "Error.html",
+            data="Please select a class first.",
+            location="/home"
+        )
+
+    if not sec:
+        return render_template(
+            "Error.html",
+            data="Please select a section first.",
+            location="/home"
+        )
+
+    try:
+        export_csv(
+            class_value=class_input,
+            sec=sec
+        )
+        return redirect("/home")
+    except Exception as e:
+        current_app.logger.error(f"CSV export failed: {e}")
+        return render_template(
+            "Error.html",
+            data="Could not export the student data.",
+            location="/home"
+        )
 
 @home_bp.route("/import_csv", methods=["GET", "POST"])
 @login_required
