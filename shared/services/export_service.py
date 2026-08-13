@@ -1,4 +1,3 @@
-# 
 import csv
 import io
 import mysql.connector as sql
@@ -70,8 +69,20 @@ def import_csv(file, class_value, sec):
             student_gmail = row[4] if len(row) > 4 and row[4] else None
 
             dob = row[5] if len(row) > 5 and row[5] else None
+            
             if dob:
-                dob = datetime.strptime(dob, "%Y-%m-%d").date()
+                try:
+                    dob = datetime.strptime(dob, "%Y-%m-%d").date()
+
+                except ValueError:
+                    try:
+                        dob = datetime.strptime(dob, "%d/%m/%Y").date()
+
+                    except ValueError:
+                        raise ValueError(
+                            f"Invalid date '{dob}'. "
+                            "Use YYYY-MM-DD or DD/MM/YYYY."
+                        )
 
             mobile_no = row[6] if len(row) > 6 and row[6] else None
 

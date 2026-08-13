@@ -349,56 +349,6 @@
   }
 </style>
 
-{% if exp %}
-<div id="loginModal" class="modal-overlay">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span>Code</span>
-      <span class="modal-close" onclick="closeLoginModal()">&times;</span>
-    </div>
-    <div class="modal-body">
-      saved csv in downloads
-    </div>
-    <div class="modal-footer">
-      <button type="button" onclick="closeLoginModal()">OK</button>
-    </div>
-  </div>
-</div>
-<script>
-  function closeLoginModal() {
-    document.getElementById('loginModal').style.display = 'none';
-  }
-</script>
-<style>
-  .modal-overlay {
-    position: fixed; top:0; left:0; width:100%; height:100%;
-    background: rgba(0,0,0,0.4);
-    display: flex; align-items:center; justify-content:center;
-    z-index: 1000;
-  }
-  .modal-box {
-    background:#fff; border-radius:8px; width:340px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    font-family: inherit;
-  }
-  .modal-header {
-    display:flex; justify-content:space-between; align-items:center;
-    padding:12px 16px;
-    background:#e6f4ea; border-radius:8px 8px 0 0; font-weight:600;
-    color:#1b4d2e;
-  }
-  .modal-close { cursor:pointer; font-size:18px; line-height:1; }
-  .modal-close:hover { color:#c0392b; }
-  .modal-body { padding:22px 18px; color:#333; }
-  .modal-footer { text-align:right; padding:12px 16px; border-top:1px solid #eee; }
-  .modal-footer button {
-    background:#2e7d32; color:#fff; border:none; padding:8px 20px;
-    border-radius:4px; cursor:pointer; font-weight:600;
-  }
-  .modal-footer button:hover { background:#1b5e20; }
-</style>
-{% endif %}
-
 <style>
   .delete:hover{
     color: red;
