@@ -49,7 +49,10 @@ def show_students():
             students_exist = Student.query.filter(Student.student_class == class_input,Student.section==session.get("sec","")).all()
             if not students_exist:
                 current_app.logger.error("No matching students found")
-                return render_template("Error.html",data="No matching students found", location="/home")
+                log1=False
+            else:
+                log1=True
+                
             session["class_value"] = class_input
 
         class_value = session.get("class_value")
@@ -62,7 +65,6 @@ def show_students():
                 Student.section == sec
             ).all()
 
-        log1=True
         current_app.logger.info(f"{session.get("username","")} is seeing the details of {class_input}-{sec}")
         return render_template(
                 "Home.html",
