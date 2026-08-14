@@ -223,11 +223,11 @@
             <tbody>
                 {% for stu in students %}
                 <tr data-roll="{{ stu.roll_no }}" data-marks="{{ total_marks.get(stu.roll_no, 0) }}" data-name="{{ stu.student_name|lower }}" data-result="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% else %}pass{% endif %}">
-                    <td data-label="Roll no" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{% endif %}">{{ stu.roll_no }}</td>
-                    <td data-label="Student name" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{% endif %}">{{ stu.student_name }}</td>
+                    <td data-label="Roll no" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{{ stu.roll_no }}</td>
+                    <td data-label="Student name" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{{ stu.student_name }}</td>
                     <td data-label="Marks" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{{ total_marks.get(stu.roll_no, 0) }}</td>
                     <td  class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{{ "%.2f"|format((total_marks.get(stu.roll_no, 0)/500)*100) }}</td>
-                    <td class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{% if total_marks.get(stu.roll_no, 0) <= 150 %}Fail{%else%}Pass{% endif %}</td>
+                    <td class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}Fail{%elif total_marks.get(stu.roll_no, 0)==0 %}Null{%else%}Pass{% endif %}</td>
                     <td data-label="Actions" class="actions">
                         <a href="/piegraph/{{ stu.roll_no }}/{{ exam_id }}">Graph analysis</a>
                     </td>
@@ -280,6 +280,7 @@
         {% else %}
         <h4>There are no data to show</h4>
         {% endif %}
+        <h4 style="color:rgb(0, 55, 255);">Null - Add marks for all the subjects to see data</h4>
       </div>
     </form>
     </div>

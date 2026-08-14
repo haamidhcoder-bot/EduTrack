@@ -32,23 +32,26 @@ def _student_in_assigned_class(roll_no):
 @login_required
 @class_teacher_required
 def graph(roll_no: int, subject: str, exam_id: int):
-    if not subject or not _student_in_assigned_class(roll_no):
-        return render_template(
-            "Error.html",
-            data="You are not authorized to view this student's report.",
-            location="/home"
+    try:
+        if not subject or not _student_in_assigned_class(roll_no):
+            return render_template(
+                "Error.html",
+                data="You are not authorized to view this student's report.",
+                location="/home"
+            )
+
+        class_value, sec = _assigned_class()
+        graph_image, _exam1 = generate_graph(
+            roll_no=roll_no,
+            subject=subject,
+            exam_id=exam_id,
+            class_value=class_value,
+            sec=sec
         )
-
-    class_value, sec = _assigned_class()
-    graph_image, _exam1 = generate_graph(
-        roll_no=roll_no,
-        subject=subject,
-        exam_id=exam_id,
-        class_value=class_value,
-        sec=sec
-    )
-    return render_template("graph.html", graph=graph_image)
-
+        return render_template("graph.html", graph=graph_image)
+    except Exception as e:
+       print(f'ERROR:{e}')
+       return render_template("Error.html",data="Enter the marks for all the subject to display",location="/home")
 
 @reports_bp.route(
     "/piegraph/<int:roll_no>/<int:exam_id>",
@@ -58,23 +61,26 @@ def graph(roll_no: int, subject: str, exam_id: int):
 @login_required
 @class_teacher_required
 def piegraph(roll_no: int, exam_id: int):
-    if not _student_in_assigned_class(roll_no):
-        return render_template(
-            "Error.html",
-            data="You are not authorized to view this student's report.",
-            location="/home"
+    try:
+        if not _student_in_assigned_class(roll_no):
+               return render_template(
+                   "Error.html",
+                   data="You are not authorized to view this student's report.",
+                   location="/home"
+               )
+       
+        class_value, sec = _assigned_class()
+        graph_image, _exam1 = generate_pie_graph(
+            roll_no=roll_no,
+            exam_id=exam_id,
+            class_value=class_value,
+            sec=sec
         )
-
-    class_value, sec = _assigned_class()
-    graph_image, _exam1 = generate_pie_graph(
-        roll_no=roll_no,
-        exam_id=exam_id,
-        class_value=class_value,
-        sec=sec
-    )
-    return render_template("graph.html", graph=graph_image)
-
-
+        return render_template("graph.html", graph=graph_image)
+    except Exception as e:
+       print(f'ERROR:{e}')
+       return render_template("Error.html",data="Enter the marks for all the subject to display",location="/home")
+    
 @reports_bp.route("/leaderboard", methods=["GET", "POST"], endpoint="leaderboard")
 @login_required
 @class_teacher_required

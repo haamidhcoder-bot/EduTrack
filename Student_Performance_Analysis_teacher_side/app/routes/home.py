@@ -80,16 +80,25 @@ def home():
     )
 
     if sub == "All" and exam is not None:
-        totals = db.session.query(
-            Mark.roll_no,
-            func.sum(Mark.marks).label("total")
-        ).join(
-            Student, Student.roll_no == Mark.roll_no
-        ).filter(
-            Mark.student_class == class_value,
-            Student.section == sec,
-            Mark.exam_id == exam.exam_id
-        ).group_by(Mark.roll_no).all()
+        totals = (
+            db.session.query(
+                Mark.roll_no,
+                func.sum(Mark.marks).label("total")
+            )
+            .join(
+                Student,
+                Student.roll_no == Mark.roll_no
+            )
+            .filter(
+                Mark.student_class == class_value,
+                Student.section == sec,
+                Mark.exam_id == exam.exam_id
+            )
+            .group_by(Mark.roll_no)
+            .having(func.count(Mark.subject) == 5)
+            .having(func.min(Mark.marks) > 0)
+            .all()
+        )
 
         total_marks = {row.roll_no: row.total for row in totals}
 

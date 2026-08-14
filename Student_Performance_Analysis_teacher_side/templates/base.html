@@ -68,6 +68,70 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .chat-button {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+
+    width: 100px;
+    height: 100px;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: visible;
+}
+
+.chat-button img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.chat-label {
+    position: absolute;
+
+    top: 20px;
+    left: 5px;
+
+    padding: 5px 10px;
+
+    border-radius: 20px;
+
+    background: rgba(128, 90, 213, 0.9);
+
+    color: white;
+
+    font-size: 14px;
+}
+
+.notification {
+    position: absolute;
+
+    top: -5px;
+    right: 5px;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 50%;
+
+    background: red;
+
+    color: white;
+
+    font-weight: bold;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
     </style>
     {%block head%}<!--jinga-->{%endblock%}
 </head>
@@ -102,6 +166,12 @@
             </a>
 
         </nav>
+        <a class="chat-button" href="/chatbot">
+            <img src="{{ url_for('static', filename='images/bot.png') }}" alt="Ask a Doubt">
+        
+            <!-- <span class="chat-label">Ask a Doubt</span> -->
+        
+        </a>
     </div>
     {%block body%}{%endblock%}
 </body>
