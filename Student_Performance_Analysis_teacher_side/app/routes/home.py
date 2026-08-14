@@ -157,3 +157,58 @@ def show_results():
 
     current_app.logger.info(f"{session.get("username","")} is seeing the details of {class_value}-{sec}")
     return redirect(url_for("home.home"))
+
+@home_bp.route("/chatbot", methods=["POST","GET"], endpoint="chatbot")
+@login_required
+def chatbot():
+    import chromadb
+    import ollama
+
+    client = chromadb.PersistentClient(path="./data_db")
+
+    collection = client.get_collection(
+        "school_notes"
+    )
+
+    while True:
+
+        question = input("\nQuestion: ")
+
+        if question.lower() == "exit":
+            break
+
+        results = collection.query(
+            query_texts=[question],
+            n_results=2
+        )
+
+        context = "\n".join(
+            results["documents"][0]
+        )
+
+        prompt = f"""
+        Context:
+
+        {context}
+
+        Question:
+
+        {question}
+
+        Answer using only the context.
+        """
+
+        response = ollama.chat(
+            model="llama3.2",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        print(
+            "\nAI:",
+            response["message"]["content"]
+        )
