@@ -2,7 +2,7 @@ from .auth import auth_bp
 from .home import home_bp
 from .marks import marks_bp
 from .reports import reports_bp
-from .email import email_bp
+from .email_routes import email_bp
 from .pages import pages_bp
 
 
