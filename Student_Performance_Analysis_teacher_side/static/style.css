@@ -647,6 +647,10 @@ nav a.active{
     color:red
 }
 
+.value{
+    color:rgb(0, 55, 255)
+}
+
 nav a i {
     font-size: 22px;
     color: white;

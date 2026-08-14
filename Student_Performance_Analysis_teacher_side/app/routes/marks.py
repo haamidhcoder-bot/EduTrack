@@ -50,11 +50,20 @@ def edit(roll_no: int, subject: str, exam_id: int):
     ).first()
 
     if not mark:
-        return render_template(
-            "Error.html",
-            data="Mark record not found.",
-            location="/home"
+        # No Mark row yet for this student/subject/exam - happens for
+        # newly imported students and for anyone just promoted into this
+        # class (promote() now clears old marks). Create it here instead
+        # of failing, so a teacher can add a student's first mark the same
+        # way they edit an existing one. A bad exam_id/roll_no still fails
+        # safely via the FK constraint when db.session.commit() runs below.
+        mark = Mark(
+            roll_no=roll_no,
+            student_class=teacher_class,
+            exam_id=exam_id,
+            subject=subject,
+            marks=0
         )
+        db.session.add(mark)
 
     if request.method == "POST":
         mar = request.form.get("content", "").strip()

@@ -17,7 +17,7 @@ def connect():
 
     return cn,cur
 
-def export_csv(class_value, sec):
+def export_csv(class_value:int, sec:str):
     cn, cur = connect()
 
     try:
@@ -29,11 +29,24 @@ def export_csv(class_value, sec):
         output = io.StringIO()
         csv_writer = csv.writer(output)
 
-        # Include column names
-        csv_writer.writerow([column[0] for column in cur.description])
+        csv_writer.writerow(
+            [
+                "student_name",
+                "student_gmail",
+                "DOB",
+                "mobile_no",
+            ]
+        )
 
-        # Write student data
-        csv_writer.writerows(cur.fetchall())
+        for row in cur.fetchall():
+            csv_writer.writerow(
+                [
+                    row[1],
+                    row[4],
+                    row[5],
+                    row[6],
+                ]
+            )
     finally:
         cur.close()
         cn.close()
@@ -43,10 +56,15 @@ def export_csv(class_value, sec):
 SECTION_CODES = {"A": 1, "B": 2, "C": 3}
 
 
-def import_csv(file, class_value, sec):
+def import_csv(file, class_value:int, sec:str):
     cn, cur = connect()
 
     reader = csv.reader(io.TextIOWrapper(file, encoding="utf-8-sig"))
+
+    # Skip the header row
+    next(reader, None)
+
+    cur.execute("DELETE FROM students WHERE class = %s", (class_value,))
 
     added = 0
     updated = 0
@@ -57,19 +75,32 @@ def import_csv(file, class_value, sec):
         for row in reader:
             row = [c.strip() for c in row]
 
-            if not row or (len(row) < 2 and not row[0]):
+            if not row:
                 continue
 
-            if row[0] and not row[0].isdigit():
+            if not any(row):
                 continue
 
-            student_name = row[1] if len(row) > 1 else ""
-            row_class = row[2] if len(row) > 2 and row[2] else class_value
-            row_section = (row[3] if len(row) > 3 and row[3] else sec).upper()
-            student_gmail = row[4] if len(row) > 4 and row[4] else None
+            student_name = row[0].strip() if len(row) > 0 else ""
 
-            dob = row[5] if len(row) > 5 and row[5] else None
-            
+            student_gmail = (
+                row[1].strip()
+                if len(row) > 1 and row[1]
+                else None
+            )
+
+            dob = (
+                row[2].strip()
+                if len(row) > 2 and row[2]
+                else None
+            )
+
+            mobile_no = (
+                row[3].strip()
+                if len(row) > 3 and row[3]
+                else None
+            )
+
             if dob:
                 try:
                     dob = datetime.strptime(dob, "%Y-%m-%d").date()
@@ -84,46 +115,21 @@ def import_csv(file, class_value, sec):
                             "Use YYYY-MM-DD or DD/MM/YYYY."
                         )
 
-            mobile_no = row[6] if len(row) > 6 and row[6] else None
+            row_class=class_value
+            row_section=sec
 
-            if not row[0]:
-                pending.append(
-                    (student_name, row_class, row_section,
-                     student_gmail, dob, mobile_no)
+            pending.append(
+                (
+                    student_name,
+                    row_class,
+                    row_section,
+                    student_gmail,
+                    dob,
+                    mobile_no,
                 )
-                continue
-
-            roll_no = int(row[0])
-            used_roll_numbers.add(roll_no)
-
-            cur.execute(
-                "SELECT 1 FROM students WHERE roll_no=%s",
-                (roll_no,)
-            )
-            exists = cur.fetchone() is not None
-
-            cur.execute(
-                """
-                INSERT INTO students
-                (roll_no, student_name, class, section,
-                 student_gmail, DOB, mobile_no)
-                VALUES (%s,%s,%s,%s,%s,%s,%s)
-                ON DUPLICATE KEY UPDATE
-                    student_name=VALUES(student_name),
-                    class=VALUES(class),
-                    section=VALUES(section),
-                    student_gmail=VALUES(student_gmail),
-                    DOB=VALUES(DOB),
-                    mobile_no=VALUES(mobile_no)
-                """,
-                (roll_no, student_name, row_class, row_section,
-                 student_gmail, dob, mobile_no)
             )
 
-            if exists:
-                updated += 1
-            else:
-                added += 1
+            added += 1
 
         groups = {}
 
@@ -188,7 +194,7 @@ def import_csv(file, class_value, sec):
                     next_roll_no += 1
 
         cn.commit()
-        return added, updated
+        return added
 
     except Exception:
         cn.rollback()
@@ -214,6 +220,16 @@ def promote():
     Classes are updated from 11 down to 1 (highest first) in separate
     statements so an already-promoted row is never picked up again by a
     later, lower-class UPDATE in the same run.
+
+    Each class's `marks` rows are deleted right before that class is shifted
+    up. marks.roll_no has ON UPDATE CASCADE, so the UPDATE below would
+    otherwise carry last year's scores forward under the student's new roll
+    number instead of resetting them - and since the subject list differs
+    between class bands (1-10 vs 11-12), those old rows wouldn't even match
+    the new class's subjects. Deleting them here also means a student's
+    marks table is empty right after promotion, so the teacher-side "add
+    marks" flow (which now creates rows on first edit) is what populates it
+    fresh for the new class.
     """
     cn, cur = connect()
 
@@ -225,6 +241,7 @@ def promote():
 
         promoted = 0
         for cls in range(11, 0, -1):
+            cur.execute("DELETE FROM marks WHERE class = %s", (cls,))
             cur.execute(
                 """
                 UPDATE students

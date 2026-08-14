@@ -202,13 +202,13 @@ def import_file():
             return render_template("Error.html", data="Only .csv files are supported.", location="/import_csv")
 
         try:
-            added, updated = import_csv(csv_file.stream, class_value=class_input, sec=sec)
+            added= import_csv(csv_file.stream, class_value=int(class_input), sec=sec)
             
         except Exception as e:
             current_app.logger.error(f"CSV import failed: {e}")
             return render_template("Error.html", data="Could not import that file. Check it matches the expected format.", location="/import_csv")
 
-        current_app.logger.info(f"{session.get('username', '')} imported a CSV: {added} added, {updated} updated")
+        current_app.logger.info(f"{session.get('username', '')} imported a CSV: {added} added")
         return redirect("/home")
 
     class_value = request.args.get("class", session.get("class_value", ""))

@@ -28,14 +28,34 @@ def _load_results(class_value, sec, subject, exam_name):
 
     results = []
     if exam is not None and subject and subject != "All":
-        results = Mark.query.join(
-            Student, Student.roll_no == Mark.roll_no
-        ).filter(
-            Mark.student_class == class_value,
-            Student.section == sec,
-            Mark.exam_id == exam.exam_id,
-            Mark.subject == subject
-        ).all()
+        # Every Mark row that already exists for this class/subject/exam.
+        existing = {
+            m.roll_no: m
+            for m in Mark.query.join(
+                Student, Student.roll_no == Mark.roll_no
+            ).filter(
+                Mark.student_class == class_value,
+                Student.section == sec,
+                Mark.exam_id == exam.exam_id,
+                Mark.subject == subject
+            ).all()
+        }
+
+        # Show every student in the class, not just the ones who already
+        # have a Mark row. Newly imported or just-promoted students have
+        # none yet, so without this they'd never appear here and the
+        # teacher would have no "Edit" link to add their first mark.
+        # These stand-in Mark objects are never added to the session -
+        # the real row gets created when the teacher actually edits it
+        # (see marks.py's edit()).
+        for stu in students:
+            results.append(existing.get(stu.roll_no) or Mark(
+                roll_no=stu.roll_no,
+                student_class=class_value,
+                exam_id=exam.exam_id,
+                subject=subject,
+                marks=0
+            ))
 
     return students, exam, results
 

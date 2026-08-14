@@ -223,11 +223,11 @@
             <tbody>
                 {% for stu in students %}
                 <tr data-roll="{{ stu.roll_no }}" data-marks="{{ total_marks.get(stu.roll_no, 0) }}" data-name="{{ stu.student_name|lower }}" data-result="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% else %}pass{% endif %}">
-                    <td data-label="Roll no" class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{{ stu.roll_no }}</td>
-                    <td data-label="Student name" class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{{ stu.student_name }}</td>
-                    <td data-label="Marks" class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{{ total_marks.get(stu.roll_no, 0) }}</td>
-                    <td  class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{{ "%.2f"|format((total_marks.get(stu.roll_no, 0)/500)*100) }}</td>
-                    <td class="{% if total_marks.get(stu.roll_no, 0) <= 150 %}fail{% endif %}">{% if total_marks.get(stu.roll_no, 0) <= 150 %}Fail{%else%}Pass{% endif %}</td>
+                    <td data-label="Roll no" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{% endif %}">{{ stu.roll_no }}</td>
+                    <td data-label="Student name" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{% endif %}">{{ stu.student_name }}</td>
+                    <td data-label="Marks" class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{{ total_marks.get(stu.roll_no, 0) }}</td>
+                    <td  class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{{ "%.2f"|format((total_marks.get(stu.roll_no, 0)/500)*100) }}</td>
+                    <td class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{% if total_marks.get(stu.roll_no, 0) <= 150 %}Fail{%else%}Pass{% endif %}</td>
                     <td data-label="Actions" class="actions">
                         <a href="/piegraph/{{ stu.roll_no }}/{{ exam_id }}">Graph analysis</a>
                     </td>
@@ -263,10 +263,10 @@
                 {% for stu in students %}
                     {% for mark in results %}
                     {% if mark.roll_no == stu.roll_no %}
-                    <tr data-roll="{{ stu.roll_no }}" data-marks="{{ mark.marks }}" data-name="{{ stu.student_name|lower }}" data-result="{% if mark.marks <= 30 %}fail{% else %}pass{% endif %}">
-                        <td data-label="Roll no" class="{% if mark.marks <= 30 %}fail{% endif %}">{{ stu.roll_no }}</td>
-                        <td data-label="Student name" class="{% if mark.marks <= 30 %}fail{% endif %}">{{ stu.student_name }}</td>
-                        <td data-label="Marks" class="{% if mark.marks <= 30 %}fail{% endif %}">{{ mark.marks }}</td>
+                    <tr data-roll="{{ stu.roll_no }}" data-marks="{{ mark.marks }}" data-name="{{ stu.student_name|lower }}" data-result="{% if mark.marks <= 30 and mark.marks!=0 %}fail{%elif mark.marks==0 %}value{% else %}pass{% endif %}">
+                        <td data-label="Roll no" class="{% if mark.marks <= 30 and mark.marks!=0 %}fail{%elif mark.marks==0 %}value{% endif %}">{{ stu.roll_no }}</td>
+                        <td data-label="Student name" class="{% if mark.marks <= 30 and mark.marks!=0 %}fail{%elif mark.marks==0 %}value{% endif %}">{{ stu.student_name }}</td>
+                        <td data-label="Marks" class="{% if mark.marks <= 30 and mark.marks!=0 %}fail{%elif mark.marks==0 %}value{% endif %}">{{ mark.marks }}</td>
                         <td data-label="Actions" class="actions">
                             <a href="/graph/{{ mark.roll_no }}/{{ mark.subject }}/{{ mark.exam_id }}">Graph analysis</a>
                             <a href="/edit/{{ mark.roll_no }}/{{ mark.subject }}/{{ mark.exam_id }}">Edit</a>
