@@ -4,6 +4,7 @@ from sqlalchemy import func
 from shared.extensions import db
 from shared.models import Student, Exam, Mark
 from shared.decorators import login_required, class_teacher_required
+from shared.services.AI_service import ask_ai
 
 home_bp = Blueprint("home", __name__)
 
@@ -161,54 +162,5 @@ def show_results():
 @home_bp.route("/chatbot", methods=["POST","GET"], endpoint="chatbot")
 @login_required
 def chatbot():
-    import chromadb
-    import ollama
-
-    client = chromadb.PersistentClient(path="./data_db")
-
-    collection = client.get_collection(
-        "school_notes"
-    )
-
-    while True:
-
-        question = input("\nQuestion: ")
-
-        if question.lower() == "exit":
-            break
-
-        results = collection.query(
-            query_texts=[question],
-            n_results=2
-        )
-
-        context = "\n".join(
-            results["documents"][0]
-        )
-
-        prompt = f"""
-        Context:
-
-        {context}
-
-        Question:
-
-        {question}
-
-        Answer using only the context.
-        """
-
-        response = ollama.chat(
-            model="llama3.2",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
-        )
-
-        print(
-            "\nAI:",
-            response["message"]["content"]
-        )
+    return redirect("/")
+#still process there

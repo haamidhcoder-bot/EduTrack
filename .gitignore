@@ -1,3 +1,5 @@
 Teacher App.log
 Management App.log
 *.csv
+data_db
+*.sqlite3
