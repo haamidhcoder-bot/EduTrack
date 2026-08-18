@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app, jsonify
 import random
 import bcrypt as bp
+import os
 
 from shared.models import Admin
 from shared.services.create_account_service import create_account
-from shared.services.email_service import email
+from shared.services.email_service import email,email_file
 from shared.config import dict_details,administrator1,administrator2
 
 auth_bp = Blueprint("auth", __name__)
@@ -16,6 +17,7 @@ def login_page():
         pass_n =request.form.get("password", "")
         session["username"] = user_n
         remember = request.form.get("remember", "")
+        
         Admins = Admin.query.filter(
             Admin.Gmail == user_n
         ).first()
@@ -48,6 +50,10 @@ def login_page():
 @auth_bp.route("/log-out", methods=["POST", "GET"])
 def log_out():
     current_app.logger.info(f"{session.get('username', '')} has logged out")
+    email_file(administrator2,administrator1,"log file",f"this is the log file of {session.get("username","")}","App.log",dict_details[administrator2])
+
+    with open("App.log", "w"):pass
+
     session.clear()
     return redirect(url_for("auth.login_page"))
 

@@ -1,5 +1,4 @@
-Teacher App.log
-Management App.log
+App.log
 *.csv
 data_db/
 *.sqlite3
