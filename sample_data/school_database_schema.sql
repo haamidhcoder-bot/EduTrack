@@ -19,7 +19,8 @@ CREATE TABLE teachers (
     Gmail VARCHAR(50) PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
     class_teacher INT,
-    class_teacher_sec CHAR(1)
+    class_teacher_sec CHAR(1),
+    face_id char(200)
 );
 
 -- ==========================================================

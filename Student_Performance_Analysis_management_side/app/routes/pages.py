@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 import random
 import bcrypt as bp
 from datetime import datetime
+import cv2
+import os
 
 from shared import db,login_required
 from shared.models import Teacher,Admin,Student
@@ -90,6 +92,19 @@ def add_teacher():
             class_teacher=request.form.get("class_teacher","").strip()
             class_teacher_sec=request.form.get("class_teacher_sec","").strip()
             confirm_password = request.form.get("confirm_password", "").strip()
+            image = request.files.get("face")
+
+            if not image:
+                return "No image received", 400
+
+            image.save("face.jpg")
+
+
+            image = cv2.imread("face.jpg")
+
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+            os.remove("face.jpg")
 
             teacher=Teacher.query.filter(Teacher.class_teacher==class_teacher,
                                   Teacher.class_teacher_sec==class_teacher_sec
@@ -99,7 +114,7 @@ def add_teacher():
                 return render_template("Error.html", data="Please fill in all fields.",location="/")
 
             if not teacher:
-                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec)
+                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec,face_id=str(gray))
 
                 if not verification:
                     return render_template("Error.html", data="duplicate entry.",location="/add_teacher")

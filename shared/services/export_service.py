@@ -2,6 +2,7 @@ import csv
 import io
 import mysql.connector as sql
 from datetime import datetime
+import csv
 
 from shared.config import Mysql_pass
 
@@ -205,37 +206,22 @@ def import_csv(file, class_value:int, sec:str):
         cn.close()
 
 def promote():
-
-    """
-    Move every student up one class (roll_no encodes class*1000 + section*100 + no,
-    so class+1 == roll_no+1000).
-
-    Class 12 students graduate and are removed first - otherwise the class-11
-    students being promoted into class 12 would collide with the roll numbers
-    already used by the outgoing class-12 batch (roll_no is a primary key).
-    Deleting a student cascades to their `marks` rows automatically (ON DELETE
-    CASCADE); it does NOT touch `attendance`, since that table has no foreign
-    key back to students and is meant to stay as a historical record.
-
-    Classes are updated from 11 down to 1 (highest first) in separate
-    statements so an already-promoted row is never picked up again by a
-    later, lower-class UPDATE in the same run.
-
-    Each class's `marks` rows are deleted right before that class is shifted
-    up. marks.roll_no has ON UPDATE CASCADE, so the UPDATE below would
-    otherwise carry last year's scores forward under the student's new roll
-    number instead of resetting them - and since the subject list differs
-    between class bands (1-10 vs 11-12), those old rows wouldn't even match
-    the new class's subjects. Deleting them here also means a student's
-    marks table is empty right after promotion, so the teacher-side "add
-    marks" flow (which now creates rows on first edit) is what populates it
-    fresh for the new class.
-    """
     cn, cur = connect()
 
     try:
         cur.execute("SELECT COUNT(*) FROM students WHERE class = 12")
         graduated = cur.fetchone()[0]
+
+        cur.execute("SELECT * FROM students WHERE class = 12")
+
+        data=cur.fetchall()
+
+        year = datetime.now().year
+
+        with open(f"Recycle_bin({year-1}-{year}).csv", "w", newline="") as f:
+            f_write = csv.writer(f)
+            f_write.writerows(data)
+            
 
         cur.execute("DELETE FROM students WHERE class = 12")
 

@@ -77,8 +77,7 @@
                         <td data-label="Student name" class="{% if total_marks.get(stu.roll_no, '') <= 150 %}fail{% endif %}" id="{%if i==stu.roll_no%}in_class{%endif%}">{{ stu.student_name }}</td>
                         <td data-label="Marks" class="{% if total_marks.get(stu.roll_no, '') <= 150 %}fail{% endif %}" id="{%if i==stu.roll_no%}in_class{%endif%}">{{ total_marks.get(stu.roll_no, '') }}</td>
                         <td  class="{% if total_marks.get(stu.roll_no, '') <= 150 %}fail{% endif %}" id="{%if i==stu.roll_no%}in_class{%endif%}">{{ (total_marks.get(stu.roll_no, '')/500)*100 }}</td>
-                        <td class="{% if total_marks.get(stu.roll_no, '') <= 150 %}fail{% endif %}" id="{%if i==stu.roll_no%}in_class{%endif%}">{% if total_marks.get(stu.roll_no, '') <= 150 %}Fail{%else%}Pass{% endif %}</td>
-                        {%else%} Add marks to veiw it
+                        <td class="{% if total_marks.get(stu.roll_no, '') <= 150 %}fail{% endif %}" id="{%if i==stu.roll_no%}in_class{%endif%}">{% if total_marks.get(stu.roll_no, '') <= 150 and total_marks.get(stu.roll_no, '')!= 0 %}Fail{%elif total_marks.get(stu.roll_no, '')== 0 %}Add marks to veiw{%else%}Pass{% endif %}</td>
                         {%endif%}
                         {%endfor%}
                     </tr>

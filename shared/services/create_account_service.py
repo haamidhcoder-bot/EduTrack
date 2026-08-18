@@ -11,6 +11,7 @@ def create_account(
     password,
     confirm_password,
     Table,
+    face_id=None,
     class_teacher=None,
     class_teacher_sec=None,
 ):
@@ -30,13 +31,14 @@ def create_account(
     # Common fields
     data = {
         "Gmail": user,
-        "password": bp.hashpw(password.encode(), bp.gensalt()),
+        "password": bp.hashpw(password.encode(), bp.gensalt())
     }
 
     # Add teacher-specific fields
     if Table.__name__ == "Teacher":
         data["class_teacher"] = class_teacher
         data["class_teacher_sec"] = class_teacher_sec
+        data["face_id"] = face_id
 
     try:
         new_user = Table(**data)
