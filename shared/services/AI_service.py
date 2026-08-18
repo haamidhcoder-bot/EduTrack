@@ -1,44 +1,103 @@
-import chromadb
+import re
+
 from google import genai
+from flask import session
+from sqlalchemy import text
+
 from shared.config import API_key
+from shared.extensions import db
+
 
 client = genai.Client(
     api_key=API_key
 )
 
-db = chromadb.PersistentClient(
-    path="./data_db"
+
+SCHEMA = """
+students
+(
+    roll_no,
+    student_name,
+    class,
+    section,
+    student_gmail,
+    DOB,
+    mobile_no
 )
 
-collection = db.get_collection(
-    "student_data"
+marks
+(
+    roll_no,
+    class,
+    exam_id,
+    subject,
+    marks
 )
 
+attendance
+(
+    id,
+    roll_no,
+    class_value,
+    section,
+    date,
+    status
+)
 
-def ask_ai(question:str) -> str:
+exams
+(
+    exam_id,
+    exam_name
+)
+"""
 
-    result = collection.query(
-        query_texts=[question],
-        n_results=30
-    )
 
-    documents = result.get("documents", [[]])[0]
+FORBIDDEN = [
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+    "DROP",
+    "ALTER",
+    "TRUNCATE",
+    "CREATE"
+]
 
-    if not documents:
-        return "No matching records were found."
 
-    context = "\n".join(documents)
+def generate_sql(question):
+
+    teacher_class = session.get("class_teacher")
+    teacher_section = session.get("class_teacher_sec")
 
     prompt = f"""
-Use only the information below.
+You are a MySQL expert.
 
-Context:
-{context}
+Database schema:
+
+{SCHEMA}
+
+The logged-in teacher teaches:
+
+Class: {teacher_class}
+Section: {teacher_section}
+
+Rules:
+
+1. Generate ONLY SELECT queries.
+
+2. Never generate INSERT, UPDATE, DELETE,
+DROP, ALTER, TRUNCATE or CREATE statements.
+
+3. If the user does not specify a class,
+assume class = {teacher_class}.
+
+4. If the user does not specify a section,
+assume section = '{teacher_section}'.
+
+5. Return ONLY SQL.
 
 Question:
-{question}
 
-If the answer isn't present in the context, say so.
+{question}
 """
 
     response = client.models.generate_content(
@@ -46,5 +105,71 @@ If the answer isn't present in the context, say so.
         contents=prompt
     )
 
-    return response.text
+    sql = response.text.strip()
 
+    sql = sql.replace("```sql", "")
+    sql = sql.replace("```", "")
+
+    return sql.strip()
+
+
+def validate_sql(sql):
+
+    upper_sql = sql.upper()
+
+    if not upper_sql.startswith("SELECT"):
+        return False
+
+    for keyword in FORBIDDEN:
+
+        if re.search(rf"\b{keyword}\b", upper_sql):
+            return False
+
+    return True
+
+
+def ask_ai(question):
+
+    try:
+
+        sql = generate_sql(question)
+
+        print("Generated SQL:")
+        print(sql)
+
+        if not validate_sql(sql):
+            return "Invalid query."
+
+        result = db.session.execute(
+            text(sql)
+        )
+
+        rows = result.mappings().all()
+
+        rows = [dict(row) for row in rows]
+
+        if not rows:
+            return "No matching records were found."
+
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=f"""
+Question:
+
+{question}
+
+Database result:
+
+{rows}
+
+Answer the question naturally.
+"""
+        )
+
+        return response.text
+
+    except Exception as e:
+
+        print(e)
+
+        return f"Error: {e}"

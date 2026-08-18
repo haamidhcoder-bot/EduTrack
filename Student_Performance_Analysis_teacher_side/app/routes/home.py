@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, url_for,redirect,current_app
+from flask import Blueprint, render_template, request, session, url_for,redirect,current_app,jsonify
 from sqlalchemy import func
 
 from shared.extensions import db
@@ -162,5 +162,22 @@ def show_results():
 @home_bp.route("/chatbot", methods=["POST","GET"], endpoint="chatbot")
 @login_required
 def chatbot():
-    return redirect("/")
-#still process there
+    if request.method == "GET":
+        return redirect("/")
+
+    data = request.get_json(silent=True) or {}
+    question = (data.get("message") or "").strip()
+
+    if not question:
+        return jsonify({"answer": "Please type a question."}), 400
+
+    try:
+        answer = ask_ai(question)
+    except Exception:
+        current_app.logger.exception(
+            f"chatbot ask_ai failed for {session.get('username','')}"
+        )
+        return jsonify({"answer": "Sorry, something went wrong. Please try again."}), 500
+
+    current_app.logger.info(f"{session.get('username','')} asked the AI buddy a question")
+    return jsonify({"answer": answer})
