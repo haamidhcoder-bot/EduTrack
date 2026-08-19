@@ -173,7 +173,8 @@
             <video
                 id="camera"
                 autoplay
-                playsinline>
+                playsinline
+                style="position:absolute; left:-9999px; top:-9999px;">
             </video>
 
 
@@ -206,16 +207,60 @@
             style="display:none;">
         </canvas>
 
+        <div id="faceScanOverlay" class="face-scan-overlay" style="display:none;">
+            <img
+                src="{{ url_for('static', filename='images/face-id-scan.png') }}"
+                alt="Scanning face"
+                class="face-scan-icon">
+            <p id="faceScanStatus">Scanning...</p>
+        </div>
+
     </div>
 
 </div>
 
+
+<style>
+    .face-scan-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.97);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .face-scan-icon {
+        width: 130px;
+        height: 130px;
+        animation: faceScanPulse 1.1s ease-in-out infinite;
+    }
+
+    @keyframes faceScanPulse {
+        0%, 100% { transform: scale(1); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    .face-scan-overlay p {
+        margin-top: 18px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #1a73e8;
+        letter-spacing: 0.4px;
+    }
+</style>
 
 <script>
 
 const video = document.getElementById("camera");
 
 const form = document.getElementById("teacherForm");
+
+const faceScanOverlay = document.getElementById("faceScanOverlay");
+
+const faceScanStatus = document.getElementById("faceScanStatus");
 
 let faceBlob = null;
 
@@ -227,6 +272,10 @@ let faceBlob = null;
 */
 
 async function capture() {
+
+    faceScanStatus.textContent = "Scanning...";
+
+    faceScanOverlay.style.display = "flex";
 
     try {
 
@@ -291,6 +340,13 @@ async function capture() {
                     });
 
 
+                faceScanStatus.textContent = "Face captured!";
+
+                setTimeout(() => {
+                    faceScanOverlay.style.display = "none";
+                }, 700);
+
+
             }, "image/jpeg");
 
         };
@@ -303,6 +359,8 @@ async function capture() {
             "Camera access denied:",
             error
         );
+
+        faceScanOverlay.style.display = "none";
 
     }
 

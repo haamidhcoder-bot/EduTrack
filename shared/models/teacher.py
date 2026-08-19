@@ -8,3 +8,4 @@ class Teacher(db.Model):
     password = db.Column(db.String(255), nullable=False)
     class_teacher=db.Column(db.Integer)
     class_teacher_sec=db.Column(db.String(1))
+    face_id=db.Column(db.String(200))

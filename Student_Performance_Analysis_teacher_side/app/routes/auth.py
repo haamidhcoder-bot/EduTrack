@@ -3,6 +3,7 @@ import bcrypt as bp
 import os
 
 from shared.models import Teacher
+from shared.services.face_id_service import match_face
 from shared.services.email_service import email_file
 from shared.config import administrator1,administrator2,dict_details
 
@@ -42,6 +43,35 @@ def login_page():
             user=session.get("username", "")
         )
     return render_template("login_page.html")
+
+
+@auth_bp.route("/login-face", methods=["POST"], endpoint="login_face")
+def login_face():
+    image = request.files.get("face")
+
+    if not image:
+        return render_template("Error.html", data="No image received", location="/")
+
+    captured_bytes = image.read()
+
+    matched_teacher = None
+    for teacher in Teacher.query.filter(Teacher.face_id.isnot(None)).all():
+        if match_face(teacher.face_id, captured_bytes):
+            matched_teacher = teacher
+            break
+
+    if matched_teacher:
+        session["username"] = matched_teacher.Gmail
+        session["logged_in"] = True
+        current_app.logger.info(f"{session.get('username', '')} logged in with Face ID")
+        return render_template(
+            "Home.html",
+            class_value=int(matched_teacher.class_teacher),
+            sec=matched_teacher.class_teacher_sec
+        )
+
+    current_app.logger.error("face id login failed: no matching face")
+    return render_template("Error.html", data="Face not recognized", location="/")
 
 
 @auth_bp.route("/log-out", methods=["POST", "GET"])

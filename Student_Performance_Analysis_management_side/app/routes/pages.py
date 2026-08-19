@@ -2,12 +2,11 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 import random
 import bcrypt as bp
 from datetime import datetime
-import cv2
-import os
 
 from shared import db,login_required
 from shared.models import Teacher,Admin,Student
 from shared.services.create_account_service import create_account
+from shared.services.face_id_service import save_face
 from shared.config import dict_details,administrator1
 from shared.services.email_service import email
 
@@ -97,14 +96,7 @@ def add_teacher():
             if not image:
                 return "No image received", 400
 
-            image.save("face.jpg")
-
-
-            image = cv2.imread("face.jpg")
-
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-            os.remove("face.jpg")
+            face_filename = save_face(image)
 
             teacher=Teacher.query.filter(Teacher.class_teacher==class_teacher,
                                   Teacher.class_teacher_sec==class_teacher_sec
@@ -113,8 +105,10 @@ def add_teacher():
             if not username or not password or not confirm_password:
                 return render_template("Error.html", data="Please fill in all fields.",location="/")
 
+            print(teacher)
+
             if not teacher:
-                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec,face_id=str(gray))
+                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec,face_id=face_filename)
 
                 if not verification:
                     return render_template("Error.html", data="duplicate entry.",location="/add_teacher")

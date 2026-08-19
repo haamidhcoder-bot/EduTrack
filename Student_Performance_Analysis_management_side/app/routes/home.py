@@ -117,21 +117,14 @@ def edit_teacher(Gmail: str):
         Teacher.Gmail == Gmail
     ).first()
     if request.method == "POST" and teacher:
-        password = request.form.get("password", "").strip()
-        confirm_password = request.form.get("confirm_password", "").strip()
         class_teacher=request.form.get("class_teacher","").strip()
         class_teacher_sec=request.form.get("class_teacher_sec","").strip()
-        if password != confirm_password:
-            return render_template("Error.html", data="Password and confirm password do not match.", location=f"/edit_teacher/{Gmail}")
 
-        if not re.match(pattern, password):
-            return render_template("Error.html", data="Password must contain at least one lowercase letter and one number.", location=f"/edit_teacher/{Gmail}")
-
-        teacher.password=bp.hashpw(password.encode(), bp.gensalt())
         teacher.class_teacher=class_teacher
         teacher.class_teacher_sec=class_teacher_sec
+        
         try:
-                current_app.logger.info(f"{session.get('username', '')} has changed password  of {Gmail}")
+                current_app.logger.info(f"{session.get('username', '')} has changed class teacher position  of {Gmail}")
                 db.session.commit()  # commiting it
                 return redirect("/teachers_data")  # back to home
         except Exception as e:
