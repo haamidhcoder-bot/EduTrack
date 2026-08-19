@@ -18,8 +18,13 @@
     </tbody>
 </table>
 <center>
-    <form class="exit" action="/log-out">
+    <form class="exit" action="/log-out" id="logoutForm">
         <button type="submit">Log Out</button>
     </form>
 </center>
+<script>
+    document.getElementById("logoutForm").addEventListener("submit", function () {
+        showPageLoadingOverlay("Logging out...");
+    });
+</script>
 {%endblock%}

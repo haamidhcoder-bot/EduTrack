@@ -68,10 +68,55 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* ---- Page transition loading overlay ---- */
+        .page-loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.97);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
+        .page-loading-overlay.show {
+            display: flex;
+        }
+        .page-loading-overlay .spinner {
+            width: 56px;
+            height: 56px;
+            border: 6px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: pageLoadingSpin 0.9s linear infinite;
+        }
+        .page-loading-overlay p {
+            margin-top: 18px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--primary);
+            letter-spacing: 0.4px;
+        }
+        @keyframes pageLoadingSpin {
+            to { transform: rotate(360deg); }
+        }
     </style>
     {%block head%}<!--jinga-->{%endblock%}
 </head>
 <body>
+    <div id="pageLoadingOverlay" class="page-loading-overlay">
+        <div class="spinner"></div>
+        <p id="pageLoadingText">Loading...</p>
+    </div>
+    <script>
+        function showPageLoadingOverlay(text) {
+            var overlay = document.getElementById("pageLoadingOverlay");
+            var label = document.getElementById("pageLoadingText");
+            if (text) label.textContent = text;
+            overlay.classList.add("show");
+        }
+    </script>
     <div class="navbar">
         <div class="brand">SCHOOL PERFORMANCE ANALYSIS</div>
   

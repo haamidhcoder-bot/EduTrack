@@ -229,7 +229,7 @@
                     <td  class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{{ "%.2f"|format((total_marks.get(stu.roll_no, 0)/500)*100) }}</td>
                     <td class="{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}fail{%elif total_marks.get(stu.roll_no, 0)==0 %}value{% endif %}">{% if total_marks.get(stu.roll_no, 0) <= 150 and total_marks.get(stu.roll_no, 0)!=0 %}Fail{%elif total_marks.get(stu.roll_no, 0)==0 %}Null{%else%}Pass{% endif %}</td>
                     <td data-label="Actions" class="actions">
-                        <a href="/piegraph/{{ stu.roll_no }}/{{ exam_id }}">Graph analysis</a>
+                        <a href="/piegraph/{{ stu.roll_no }}/{{ exam_id }}" onclick="showPageLoadingOverlay('Loading graph...')">Graph analysis</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -269,7 +269,7 @@
                         <td data-label="Student name" class="{% if mark.marks <= 30 and mark.marks!=0 %}fail{%elif mark.marks==0 %}value{% endif %}">{{ stu.student_name }}</td>
                         <td data-label="Marks" class="{% if mark.marks <= 30 and mark.marks!=0 %}fail{%elif mark.marks==0 %}value{% endif %}">{{ mark.marks }}</td>
                         <td data-label="Actions" class="actions">
-                            <a href="/graph/{{ mark.roll_no }}/{{ mark.subject }}/{{ mark.exam_id }}">Graph analysis</a>
+                            <a href="/graph/{{ mark.roll_no }}/{{ mark.subject }}/{{ mark.exam_id }}" onclick="showPageLoadingOverlay('Loading graph...')">Graph analysis</a>
                             <a href="/edit/{{ mark.roll_no }}/{{ mark.subject }}/{{ mark.exam_id }}">Edit</a>
                         </td>
                     </tr>
