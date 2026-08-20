@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for, current_app, jsonify
 import hashlib
 import hmac
+import os
 import secrets
 import time
 import bcrypt as bp
@@ -9,7 +10,7 @@ from datetime import datetime
 from shared import db,login_required
 from shared.models import Teacher,Admin,Student
 from shared.services.create_account_service import create_account
-from shared.services.face_id_service import save_face
+from shared.services.face_id_service import save_face, FACE_ID_DIR
 from shared.config import dict_details,administrator1
 from shared.services.email_service import email
 from shared.services.profile_service import initials_for_name, password_bytes
@@ -210,7 +211,11 @@ def profile_details():
 @pages_bp.route("/settings", endpoint="settings")
 @login_required
 def settings():
-    return render_template("settings.html", role="Administrator", face_enabled=False)
+    admin = Admin.query.filter_by(Gmail=session.get("username", "")).first()
+    if not admin:
+        session.clear()
+        return redirect(url_for("auth.login_page"))
+    return render_template("settings.html", role="Administrator", face_enabled=bool(admin.face_id))
 
 
 @pages_bp.route("/change-password", methods=["GET", "POST"], endpoint="change_password")
@@ -245,6 +250,39 @@ def change_password():
         return redirect(url_for("pages.settings", password_changed=1))
 
     return render_template("change_password.html", role="Administrator")
+
+@pages_bp.route("/face-id", methods=["GET", "POST"], endpoint="face_id")
+@login_required
+def face_id():
+    username = session.get("username", "")
+    admin = Admin.query.filter_by(Gmail=username).first()
+    if not admin:
+        session.clear()
+        return redirect(url_for("auth.login_page"))
+
+    if request.method == "POST":
+        image = request.files.get("face")
+        if not image:
+            return render_template("face_id.html", error="Please capture your face before saving.", enabled=bool(admin.face_id))
+
+        old_face = admin.face_id
+        new_face = save_face(image)
+        admin.face_id = new_face
+        db.session.commit()
+
+        if old_face:
+            old_path = os.path.join(FACE_ID_DIR, old_face)
+            if os.path.exists(old_path):
+                try:
+                    os.remove(old_path)
+                except OSError:
+                    current_app.logger.warning(f"Could not remove old Face ID file for {username}")
+
+        current_app.logger.info(f"{username} updated Face ID")
+        return redirect(url_for("pages.settings", face_updated=1))
+
+    return render_template("face_id.html", enabled=bool(admin.face_id))
+
 
 @pages_bp.route("/register",endpoint="register")
 def register():

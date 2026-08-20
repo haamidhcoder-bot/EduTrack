@@ -12,7 +12,7 @@
         <div class="login-box">
           <h1>Register</h1>
           <p class="register-line" style="margin-bottom:16px;">Enter the 4-digit code we emailed you</p>
-          <form method="POST" action="/register_verification/{{username}}/{{password}}/{{confirm_password}}">
+          <form method="POST" action="{{ url_for('auth.register_verification') }}">
             <div class="otp-boxes" data-otp-group role="group" aria-label="One-time code, 4 digits">
               <span class="otp-ripple" aria-hidden="true"></span>
               <span class="otp-ripple otp-ripple--accent" aria-hidden="true"></span>

@@ -1818,3 +1818,19 @@ html.dark-mode .page-loading-overlay,
 body.dark-mode .page-loading-overlay {
     background: rgba(12, 14, 18, .97);
 }
+
+/* Face ID capture: full-screen flash used to brighten dark rooms
+   before a face photo is taken. See static/js/face-capture.js */
+.face-capture-flash {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 99999;
+    transition: opacity 0.15s ease;
+}
+
+.face-capture-flash.is-active {
+    opacity: 1;
+}

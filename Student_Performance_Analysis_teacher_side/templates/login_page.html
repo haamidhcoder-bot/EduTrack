@@ -92,6 +92,7 @@
         }
     </style>
 
+    <script src="{{ url_for('static', filename='js/face-capture.js') }}"></script>
     <script>
         const video = document.getElementById("camera");
         const canvas = document.getElementById("canvas");
@@ -118,74 +119,59 @@
 
                 video.srcObject = stream;
 
-                video.onloadedmetadata = () => {
+                video.onloadedmetadata = async () => {
 
-                    const context =
-                        canvas.getContext("2d");
+                    // Grabs the frame, flashing the screen white first
+                    // if the room looks dark, for a clearer capture.
+                    const blob = await captureFaceFrame(video, canvas);
 
-                    canvas.width =
-                        video.videoWidth;
-
-                    canvas.height =
-                        video.videoHeight;
-
-                    context.drawImage(
-                        video,
-                        0,
-                        0
+                    console.log(
+                        "Face captured successfully"
                     );
 
-                    canvas.toBlob(async blob => {
+                    /*
+                        Stop camera
+                    */
 
-                        console.log(
-                            "Face captured successfully"
+                    stream
+                        .getTracks()
+                        .forEach(track => {
+                            track.stop();
+                        });
+
+                    faceScanStatus.textContent = "Verifying...";
+
+                    /*
+                        Send captured face to Flask
+                        for matching against stored
+                        face_id
+                    */
+
+                    const formData = new FormData();
+
+                    formData.append(
+                        "face",
+                        blob,
+                        "face.jpg"
+                    );
+
+                    const response =
+                        await fetch(
+                            "{{ url_for('auth.login_face') }}",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
                         );
 
-                        /*
-                            Stop camera
-                        */
+                    const result =
+                        await response.text();
 
-                        stream
-                            .getTracks()
-                            .forEach(track => {
-                                track.stop();
-                            });
+                    document.open();
 
-                        faceScanStatus.textContent = "Verifying...";
+                    document.write(result);
 
-                        /*
-                            Send captured face to Flask
-                            for matching against stored
-                            face_id
-                        */
-
-                        const formData = new FormData();
-
-                        formData.append(
-                            "face",
-                            blob,
-                            "face.jpg"
-                        );
-
-                        const response =
-                            await fetch(
-                                "{{ url_for('auth.login_face') }}",
-                                {
-                                    method: "POST",
-                                    body: formData
-                                }
-                            );
-
-                        const result =
-                            await response.text();
-
-                        document.open();
-
-                        document.write(result);
-
-                        document.close();
-
-                    }, "image/jpeg");
+                    document.close();
 
                 };
 

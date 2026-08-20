@@ -26,14 +26,171 @@
               <a href="{{ url_for('pages.forgot_password') }}">Forgot Password?</a>
             </div>
             <button type="submit" class="login-btn">Login</button>
+            <video
+            id="camera"
+            autoplay
+            playsinline
+            style="position:absolute; left:-9999px; top:-9999px;">
+        </video>
+
+
+        <!-- Capture face -->
+
+        <button
+            type="button"
+            onclick="capture()">
+
+            Login with Face ID
+
+        </button>
+
           </form>
+          <canvas id="canvas" style="display:none;"></canvas>
+
+          <div id="faceScanOverlay" class="face-scan-overlay" style="display:none;">
+              <img
+                  src="{{ url_for('static', filename='images/face-id-scan.png') }}"
+                  alt="Scanning face"
+                  class="face-scan-icon">
+              <p id="faceScanStatus">Scanning...</p>
+          </div>
+
           <div class="register-line"><br>
             <a href="{{url_for('pages.register')}}">Register</a><br>
           <a href="{{ url_for('pages.support') }}">Support</a></div>
         </div>
       </div>
 
+    <style>
+        .face-scan-overlay {
+            position: fixed;
+            inset: 0;
+            background:linear-gradient(160deg, rgba(11, 61, 46, 0.45) 0%, rgba(27, 94, 59, 0.35) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .face-scan-icon {
+            width: 130px;
+            height: 130px;
+            animation: faceScanPulse 1.1s ease-in-out infinite;
+        }
+
+        @keyframes faceScanPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .face-scan-overlay p {
+            margin-top: 18px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #1b5e3b;
+            letter-spacing: 0.4px;
+        }
+    </style>
+
+    <script src="{{ url_for('static', filename='js/face-capture.js') }}"></script>
     <script>
+        const video = document.getElementById("camera");
+        const canvas = document.getElementById("canvas");
+        const faceScanOverlay = document.getElementById("faceScanOverlay");
+        const faceScanStatus = document.getElementById("faceScanStatus");
+
+        /*
+            =====================================
+            CAPTURE FACE + LOGIN
+            =====================================
+        */
+
+        async function capture() {
+
+            faceScanStatus.textContent = "Scanning...";
+            faceScanOverlay.style.display = "flex";
+
+            try {
+
+                const stream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: true
+                    });
+
+                video.srcObject = stream;
+
+                video.onloadedmetadata = async () => {
+
+                    // Grabs the frame, flashing the screen white first
+                    // if the room looks dark, for a clearer capture.
+                    const blob = await captureFaceFrame(video, canvas);
+
+                    console.log(
+                        "Face captured successfully"
+                    );
+
+                    /*
+                        Stop camera
+                    */
+
+                    stream
+                        .getTracks()
+                        .forEach(track => {
+                            track.stop();
+                        });
+
+                    faceScanStatus.textContent = "Verifying...";
+
+                    /*
+                        Send captured face to Flask
+                        for matching against stored
+                        face_id
+                    */
+
+                    const formData = new FormData();
+
+                    formData.append(
+                        "face",
+                        blob,
+                        "face.jpg"
+                    );
+
+                    const response =
+                        await fetch(
+                            "{{ url_for('auth.login_face') }}",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+                    const result =
+                        await response.text();
+
+                    document.open();
+
+                    document.write(result);
+
+                    document.close();
+
+                };
+
+            }
+
+            catch (error) {
+
+                console.log(
+                    "Camera access denied:",
+                    error
+                );
+
+                faceScanOverlay.style.display = "none";
+
+            }
+
+        }
+
         document.querySelectorAll('.password-toggle-btn').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 const input = document.getElementById(btn.dataset.target);

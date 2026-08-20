@@ -8,15 +8,20 @@ PASSWORD_PATTERN = r"^(?=.*[0-9])(?=.*[a-z]).+$"
 
 def create_account(
     user,
-    password,
-    confirm_password,
-    Table,
+    password=None,
+    confirm_password=None,
+    Table=None,
     face_id=None,
     class_teacher=None,
     class_teacher_sec=None,
+    password_hash=None,
 ):
     """
     Creates an account for any model.
+
+    A plaintext password is accepted for normal internal account creation.
+    For multi-step registration flows, pass password_hash so the plaintext
+    password never needs to be placed in a URL or stored in the session.
 
     Returns:
         True   -> Account created successfully.
@@ -24,17 +29,18 @@ def create_account(
         ""     -> Database error.
     """
 
-    # Validate password
-    if password != confirm_password or not re.match(PASSWORD_PATTERN, password):
-        return "pass"
+    if password_hash is None:
+        if password is None or confirm_password is None:
+            return "pass"
+        if password != confirm_password or not re.match(PASSWORD_PATTERN, password):
+            return "pass"
+        password_hash = bp.hashpw(password.encode(), bp.gensalt()).decode("utf-8")
 
-    # Common fields
     data = {
         "Gmail": user,
-        "password": bp.hashpw(password.encode(), bp.gensalt()).decode("utf-8")
+        "password": password_hash,
     }
 
-    # Add teacher-specific fields
     if Table.__name__ == "Teacher":
         data["class_teacher"] = class_teacher
         data["class_teacher_sec"] = class_teacher_sec

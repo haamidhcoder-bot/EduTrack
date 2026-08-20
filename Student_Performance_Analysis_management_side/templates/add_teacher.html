@@ -7,6 +7,7 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='js/face-capture.js') }}"></script>
 </head>
 
 <body>
@@ -288,66 +289,40 @@ async function capture() {
         video.srcObject = stream;
 
 
-        video.onloadedmetadata = () => {
+        video.onloadedmetadata = async () => {
 
             const canvas =
                 document.getElementById("canvas");
 
-            const context =
-                canvas.getContext("2d");
-
-
-            canvas.width =
-                video.videoWidth;
-
-            canvas.height =
-                video.videoHeight;
-
-
             /*
-                Take current video frame
-                and put it onto canvas
+                Take the current video frame and put it onto canvas.
+                If the room looks dark, the screen flashes white first
+                so the stored reference photo stays clear.
             */
 
-            context.drawImage(
-                video,
-                0,
-                0
+            faceBlob = await captureFaceFrame(video, canvas);
+
+            console.log(
+                "Face captured successfully"
             );
 
 
             /*
-                Convert canvas to JPEG
+                Stop camera
             */
 
-            canvas.toBlob(blob => {
-
-                faceBlob = blob;
-
-                console.log(
-                    "Face captured successfully"
-                );
+            stream
+                .getTracks()
+                .forEach(track => {
+                    track.stop();
+                });
 
 
-                /*
-                    Stop camera
-                */
+            faceScanStatus.textContent = "Face captured!";
 
-                stream
-                    .getTracks()
-                    .forEach(track => {
-                        track.stop();
-                    });
-
-
-                faceScanStatus.textContent = "Face captured!";
-
-                setTimeout(() => {
-                    faceScanOverlay.style.display = "none";
-                }, 700);
-
-
-            }, "image/jpeg");
+            setTimeout(() => {
+                faceScanOverlay.style.display = "none";
+            }, 700);
 
         };
 

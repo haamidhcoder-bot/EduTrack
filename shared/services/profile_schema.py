@@ -4,11 +4,12 @@ from sqlalchemy import text
 def ensure_profile_columns(db):
     """Add the profile name column to existing databases if it is missing."""
     statements = [
-        ("teachers", "ALTER TABLE teachers ADD COLUMN name VARCHAR(100) NULL"),
-        ("Admin", "ALTER TABLE Admin ADD COLUMN name VARCHAR(100) NULL"),
+        ("teachers", "name", "ALTER TABLE teachers ADD COLUMN name VARCHAR(100) NULL"),
+        ("Admin", "name", "ALTER TABLE Admin ADD COLUMN name VARCHAR(100) NULL"),
+        ("Admin", "face_id", "ALTER TABLE Admin ADD COLUMN face_id VARCHAR(200) NULL"),
     ]
 
-    for table_name, alter_sql in statements:
+    for table_name, column_name, alter_sql in statements:
         exists = db.session.execute(
             text(
                 """
@@ -16,10 +17,10 @@ def ensure_profile_columns(db):
                 FROM information_schema.columns
                 WHERE table_schema = DATABASE()
                   AND table_name = :table_name
-                  AND column_name = 'name'
+                  AND column_name = :column_name
                 """
             ),
-            {"table_name": table_name},
+            {"table_name": table_name, "column_name": column_name},
         ).scalar()
 
         if not exists:
