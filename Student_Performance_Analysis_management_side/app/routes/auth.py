@@ -7,6 +7,7 @@ from shared.models import Admin
 from shared.services.create_account_service import create_account
 from shared.services.email_service import email,email_file
 from shared.config import dict_details,administrator1,administrator2
+from shared.services.profile_service import password_bytes
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -22,7 +23,7 @@ def login_page():
             Admin.Gmail == user_n
         ).first()
 
-        if Admins and bp.checkpw(pass_n.encode(),Admins.password.encode()):
+        if Admins and bp.checkpw(pass_n.encode(), password_bytes(Admins.password)):
             session["logged_in"] = True
             if remember:
                 session.permanent = True

@@ -6,6 +6,7 @@ from shared.models import Teacher
 from shared.services.face_id_service import match_face
 from shared.services.email_service import email_file
 from shared.config import administrator1,administrator2,dict_details
+from shared.services.profile_service import password_bytes
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -20,7 +21,7 @@ def login_page():
 
         teacher = Teacher.query.filter(Teacher.Gmail == user_n).first()
 
-        if teacher and bp.checkpw(pass_n.encode(), teacher.password.encode()):
+        if teacher and bp.checkpw(pass_n.encode(), password_bytes(teacher.password)):
             session["logged_in"] = True
             if remember:
                 session.permanent = True

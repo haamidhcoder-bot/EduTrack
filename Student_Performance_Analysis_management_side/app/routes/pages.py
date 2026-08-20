@@ -9,6 +9,7 @@ from shared.services.create_account_service import create_account
 from shared.services.face_id_service import save_face
 from shared.config import dict_details,administrator1
 from shared.services.email_service import email
+from shared.services.profile_service import initials_for_name, password_bytes
 
 pages_bp = Blueprint("pages", __name__)
 
@@ -62,7 +63,7 @@ def forgot_password_verification(username: str,password:str):
                 otp = request.form.get("onepass", "")
 
             if otp==session.get("OTP"):
-                admin.password = bp.hashpw(password.encode(),bp.gensalt()) 
+                admin.password = bp.hashpw(password.encode(),bp.gensalt()).decode("utf-8") 
                 db.session.commit()
                 session.pop("OTP", None)
                 current_app.logger.info(f"Password reset requested for {username}")
@@ -75,8 +76,86 @@ def forgot_password_verification(username: str,password:str):
         return redirect(url_for("auth.login_page"))
 
 @pages_bp.route("/profile", endpoint="profile")
+@login_required
 def profile():
-    return render_template("profile.html", username=session.get("username", "").removesuffix("@gmail.com"))
+    username = session.get("username", "")
+    admin = Admin.query.filter_by(Gmail=username).first()
+    if not admin:
+        session.clear()
+        return redirect(url_for("auth.login_page"))
+
+    display_name = admin.name.strip() if admin.name and admin.name.strip() else "Set your name"
+    return render_template(
+        "profile.html",
+        account=admin,
+        display_name=display_name,
+        initials=initials_for_name(admin.name),
+        role="Administrator",
+    )
+
+
+@pages_bp.route("/profile-details", methods=["GET", "POST"], endpoint="profile_details")
+@login_required
+def profile_details():
+    username = session.get("username", "")
+    admin = Admin.query.filter_by(Gmail=username).first()
+    if not admin:
+        session.clear()
+        return redirect(url_for("auth.login_page"))
+
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        if not name:
+            return render_template("profile_details.html", account=admin, role="Administrator", error="Please enter your name.")
+        if len(name) > 100:
+            return render_template("profile_details.html", account=admin, role="Administrator", error="Name must be 100 characters or fewer.")
+
+        admin.name = name
+        db.session.commit()
+        current_app.logger.info(f"{username} updated profile name")
+        return redirect(url_for("pages.profile"))
+
+    return render_template("profile_details.html", account=admin, role="Administrator")
+
+
+@pages_bp.route("/settings", endpoint="settings")
+@login_required
+def settings():
+    return render_template("settings.html", role="Administrator", face_enabled=False)
+
+
+@pages_bp.route("/change-password", methods=["GET", "POST"], endpoint="change_password")
+@login_required
+def change_password():
+    username = session.get("username", "")
+    admin = Admin.query.filter_by(Gmail=username).first()
+    if not admin:
+        session.clear()
+        return redirect(url_for("auth.login_page"))
+
+    if request.method == "POST":
+        current_password = request.form.get("current_password", "")
+        new_password = request.form.get("new_password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if not current_password or not new_password or not confirm_password:
+            return render_template("change_password.html", error="Please fill in all fields.", role="Administrator")
+
+        if not bp.checkpw(current_password.encode(), password_bytes(admin.password)):
+            return render_template("change_password.html", error="Current password is incorrect.", role="Administrator")
+
+        if new_password != confirm_password:
+            return render_template("change_password.html", error="New passwords do not match.", role="Administrator")
+
+        if len(new_password) < 8:
+            return render_template("change_password.html", error="New password must contain at least 8 characters.", role="Administrator")
+
+        admin.password = bp.hashpw(new_password.encode(), bp.gensalt()).decode("utf-8")
+        db.session.commit()
+        current_app.logger.info(f"{username} changed the password")
+        return redirect(url_for("pages.settings", password_changed=1))
+
+    return render_template("change_password.html", role="Administrator")
 
 @pages_bp.route("/register",endpoint="register")
 def register():

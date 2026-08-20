@@ -1732,3 +1732,85 @@ html[data-theme="dark"] .profile-row.danger .profile-row-icon {
         padding: 32px 20px 60px;
     }
 }
+
+/* ============================================================
+   Account-wide dark mode
+   ============================================================ */
+html.dark-mode {
+    color-scheme: dark;
+}
+
+html.dark-mode body,
+body.dark-mode {
+    --white: #171a20;
+    --text-dark: #edf0f5;
+    --text-muted: #a8adb8;
+    --border: #343945;
+    --primary-pale: #20242d;
+    --page-bg: #101218;
+    --card-bg: #171a20;
+    --account-border: #343945;
+    --account-text: #edf0f5;
+    --account-heading: #ffffff;
+    --account-muted: #a8adb8;
+    --account-input-border: #454b59;
+    --account-input-bg: #11141a;
+    background: #101218;
+    color: #edf0f5;
+}
+
+html.dark-mode body a,
+body.dark-mode a { color: var(--primary-light); }
+
+html.dark-mode .card,
+html.dark-mode table,
+html.dark-mode .table-container,
+html.dark-mode .modal-content,
+html.dark-mode .container .card,
+body.dark-mode .card,
+body.dark-mode table,
+body.dark-mode .table-container,
+body.dark-mode .modal-content,
+body.dark-mode .container .card {
+    background: #171a20;
+    color: #edf0f5;
+    border-color: #343945;
+}
+
+html.dark-mode input,
+html.dark-mode select,
+html.dark-mode textarea,
+html.dark-mode .form-control,
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .form-control {
+    background-color: #11141a;
+    color: #edf0f5;
+    border-color: #454b59;
+}
+
+html.dark-mode th,
+html.dark-mode td,
+body.dark-mode th,
+body.dark-mode td {
+    border-color: #343945;
+}
+
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode label,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode label {
+    color: #f5f7fb;
+}
+
+html.dark-mode .page-loading-overlay,
+body.dark-mode .page-loading-overlay {
+    background: rgba(12, 14, 18, .97);
+}

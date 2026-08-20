@@ -15,6 +15,7 @@ from datetime import timedelta
 from shared.config import Mysql_pass, session_key1
 from shared import db
 from shared.utils.logger import setup_logger
+from shared.services.profile_schema import ensure_profile_columns
 from app.routes import register_blueprints
 
 # Project root (one level above the app/ package), so templates/ and
@@ -44,6 +45,9 @@ def create_app():
     )
 
     db.init_app(app)
+
+    with app.app_context():
+        ensure_profile_columns(db)
 
     setup_logger(app)
 

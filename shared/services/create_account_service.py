@@ -31,7 +31,7 @@ def create_account(
     # Common fields
     data = {
         "Gmail": user,
-        "password": bp.hashpw(password.encode(), bp.gensalt())
+        "password": bp.hashpw(password.encode(), bp.gensalt()).decode("utf-8")
     }
 
     # Add teacher-specific fields

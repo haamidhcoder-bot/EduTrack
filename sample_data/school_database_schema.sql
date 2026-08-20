@@ -17,6 +17,7 @@ USE schooldb;
 
 CREATE TABLE teachers (
     Gmail VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100),
     password VARCHAR(255) NOT NULL,
     class_teacher INT,
     class_teacher_sec CHAR(1),
@@ -92,6 +93,7 @@ ON marks(exam_id);
 
 CREATE TABLE Admin (
     Gmail VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100),
     password VARCHAR(255) NOT NULL
 );
 
