@@ -11,6 +11,7 @@
     <div class="login-wrapper">
         <div class="login-box">
           <h1>Login</h1>
+          {% if request.args.get('account_deleted') %}<div class="alert alert-success">Your account has been deleted.</div>{% endif %}
           <form method="POST">
             <input type="email" name="username" class="icon-email" placeholder="Email ID" required>
 

@@ -208,6 +208,40 @@ def profile_details():
     return render_template("profile_details.html", account=admin, role="Administrator")
 
 
+@pages_bp.route("/delete-account", methods=["GET", "POST"], endpoint="delete_account")
+@login_required
+def delete_account():
+    username = session.get("username", "")
+    admin = Admin.query.filter_by(Gmail=username).first()
+    if not admin:
+        session.clear()
+        return redirect(url_for("auth.login_page"))
+
+    if request.method == "POST":
+        password = request.form.get("password", "")
+
+        if not password:
+            return render_template("delete_account.html", role="Administrator", error="Please enter your password.")
+
+        if not bp.checkpw(password.encode(), password_bytes(admin.password)):
+            return render_template("delete_account.html", role="Administrator", error="Incorrect password.")
+
+        if Admin.query.count() <= 1:
+            return render_template(
+                "delete_account.html",
+                role="Administrator",
+                error="This is the only administrator account, so it can't be deleted.",
+            )
+
+        db.session.delete(admin)
+        db.session.commit()
+        current_app.logger.info(f"{username} deleted their own admin account")
+        session.clear()
+        return redirect(url_for("auth.login_page", account_deleted=1))
+
+    return render_template("delete_account.html", role="Administrator")
+
+
 @pages_bp.route("/settings", endpoint="settings")
 @login_required
 def settings():

@@ -59,6 +59,14 @@
                     <i class="fa-solid fa-chevron-right account-chevron"></i>
                 </a>
 
+                <a class="account-menu-item account-logout" href="{{ url_for('pages.delete_account') }}">
+                    <span class="account-menu-left">
+                        <i class="fa-solid fa-trash-can account-menu-icon"></i>
+                        <span>Delete account</span>
+                    </span>
+                    <i class="fa-solid fa-chevron-right account-chevron"></i>
+                </a>
+
                 <form action="{{ url_for('auth.log_out') }}" method="get" id="logoutForm">
                     <button class="account-menu-item account-logout" type="submit">
                         <span class="account-menu-left">
