@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app, jsonify
 import random
 import bcrypt as bp
-import os
 
 from shared.models import Admin
 from shared.services.create_account_service import create_account

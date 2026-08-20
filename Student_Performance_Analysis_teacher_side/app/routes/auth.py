@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, redirect, request, session, url_for, current_app
 import bcrypt as bp
-import os
 
 from shared.models import Teacher
 from shared.services.face_id_service import match_face

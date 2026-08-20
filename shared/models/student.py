@@ -1,5 +1,4 @@
 from shared.extensions import db
-from datetime import date
 
 class Student(db.Model):
     __tablename__ = "students"

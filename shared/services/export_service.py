@@ -2,7 +2,6 @@ import csv
 import io
 import mysql.connector as sql
 from datetime import datetime
-import csv
 
 from shared.config import Mysql_pass
 
@@ -68,7 +67,6 @@ def import_csv(file, class_value:int, sec:str):
     cur.execute("DELETE FROM students WHERE class = %s", (class_value,))
 
     added = 0
-    updated = 0
     pending = []
     used_roll_numbers = set()
 

@@ -1,6 +1,4 @@
 from flask import Blueprint, render_template, redirect, request, session, current_app,Response
-import re
-import bcrypt as bp
 
 from shared import db,login_required
 from shared.models import Student,Teacher
@@ -112,7 +110,6 @@ def edit(roll_no: int):
 @home_bp.route("/edit_teacher/<Gmail>", methods=["GET", "POST"])
 @login_required
 def edit_teacher(Gmail: str):
-    pattern = r"^(?=.*[0-9])(?=.*[a-z]).+$"
     teacher = Teacher.query.filter(
         Teacher.Gmail == Gmail
     ).first()

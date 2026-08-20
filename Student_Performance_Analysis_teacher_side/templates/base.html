@@ -312,7 +312,7 @@
             </a>
 
         </nav>
-        {%if request.path!="/about" and request.path!="/profile" %}
+        {%if request.path!="/about" and request.path!="/profile" and request.path!="/settings"  and request.path!="/profile-details"%}
         <button type="button" class="chat-button" id="aiChatToggle">
             <img src="{{ url_for('static', filename='images/Gemini.png') }}" alt="Ask AI">
             <span class="ai-text">Ask AI</span>
