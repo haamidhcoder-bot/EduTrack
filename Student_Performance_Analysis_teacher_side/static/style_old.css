@@ -1,22 +1,22 @@
 /* ============================================================
-   School Management System — Dark Green Theme
+   School Management System — Blue Theme
    style.css
    ============================================================ */
 
 :root {
-    --primary-dark:   #0B3D2E;
-    --primary:        #1B5E3B;
-    --primary-mid:    #2E8B57;
-    --primary-light:  #9FD9B4;   /* matches your matplotlib chart bg */
-    --primary-pale:   #E8F5EC;
-    --accent:         #145A32;
+    --primary-dark:   #0B3D66;
+    --primary:        #1565A6;
+    --primary-mid:    #1E88D6;
+    --primary-light:  #9FD3F5;   /* matches your matplotlib chart bg */
+    --primary-pale:   #E8F3FC;
+    --accent:         #0D47A1;
     --white:          #FFFFFF;
-    --text-dark:      #1A2E22;
-    --text-muted:     #5A7368;
-    --border:         #C7E0D0;
+    --text-dark:      #1A2733;
+    --text-muted:     #5A7386;
+    --border:         #C7DEF0;
     --success:        #2E7D32;
     --error:          #C62828;
-    --shadow:         0 4px 14px rgba(11, 61, 46, 0.15);
+    --shadow:         0 4px 14px rgba(11, 61, 102, 0.15);
     --radius:         10px;
 }
 
@@ -49,7 +49,7 @@ h1, h2, h3 {
 /* ---------------- Navbar / Header ---------------- */
 
 .navbar {
-    background: linear-gradient(90deg, var(--primary-dark) 0%, var(--primary) 56%, var(--primary-mid) 100%);
+    background: linear-gradient(90deg, #0A2E52 0%, #1565A6 55%, #2E8BC9 100%);
     color: var(--white);
     padding: 20px 40px;
     display: flex;
@@ -62,7 +62,7 @@ h1, h2, h3 {
     font-size: 1.6rem;
     font-weight: 800;
     font-style: italic;
-    color: #EAFBEF;
+    color: #EAF4FF;
     letter-spacing: 0.5px;
 }
 
@@ -120,7 +120,7 @@ h1, h2, h3 {
     justify-content: center;
     gap: 28px;
     background-image:
-        linear-gradient(160deg, rgba(11, 61, 46, 0.45) 0%, rgba(27, 94, 59, 0.35) 100%),
+        linear-gradient(160deg, rgba(11, 61, 102, 0.45) 0%, rgba(21, 101, 166, 0.35) 100%),
         url("images/login-bg.svg");
     background-size: cover;
     background-position: center;
@@ -129,7 +129,7 @@ h1, h2, h3 {
 }
 
 .login-box {
-    background: rgba(20, 90, 50, 0.35);
+    background: rgba(4, 85, 236, 0.35);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     width: 100%;
@@ -280,7 +280,6 @@ form label {
 }
 
 input[type="text"],
-input[type="email"],
 input[type="password"],
 input[type="number"],
 select {
@@ -292,14 +291,13 @@ select {
     color: var(--text-dark);
     background: var(--primary-pale);
     transition: border-color 0.15s, box-shadow 0.15s;
-    margin-bottom: 15px;
 }
 
 input:focus,
 select:focus {
     outline: none;
     border-color: var(--primary-mid);
-    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.25);
+    box-shadow: 0 0 0 3px rgba(30, 136, 214, 0.25);
     background: var(--white);
 }
 
@@ -320,7 +318,7 @@ button,
 
 button:hover,
 .btn:hover {
-    /* background: var(--accent); */
+    background: var(--accent);
     transform: translateY(-1px);
 }
 
@@ -395,7 +393,7 @@ tbody tr:nth-child(even) td {
 }
 
 tbody tr:hover td {
-    background: #D6EEDD;
+    background: #D6EBFA;
 }
 
 td.actions a {
@@ -510,55 +508,6 @@ td.total-marks {
     transition: transform 0.2s ease;
 }
 
-/* ---------------- Teachers page ---------------- */
-
-.teacher-count-badge {
-    background: var(--primary-pale);
-    color: var(--primary-dark);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 14px;
-    font-size: 0.8rem;
-    font-weight: 700;
-}
-
-.teacher-cell {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.teacher-avatar {
-    width: 36px;
-    height: 36px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: linear-gradient(160deg, var(--primary-mid) 0%, var(--primary-dark) 100%);
-    color: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.95rem;
-}
-
-.teacher-email {
-    font-weight: 500;
-    color: var(--text-dark);
-}
-
-.password-toggle {
-    background-color: transparent;
-    color: var(--primary);
-    font-size: 1rem;
-    padding: 6px;
-}
-
-.password-toggle:hover {
-    background-color: transparent;
-    color: var(--primary-dark);
-    opacity: 1;
-}
 /* ---------------- Password visibility toggle ---------------- */
 
 .password-field {
@@ -596,6 +545,7 @@ td.total-marks {
 
 .password-toggle-btn:hover,
 .password-toggle-btn:active {
+    background: none;
     transform: translateY(-50%);
 }
 
@@ -611,6 +561,7 @@ td.total-marks {
 
 .login-box .password-toggle-btn:hover,
 .login-box .password-toggle-btn:active {
+    background: none;
     transform: translateY(-50%);
 }
 
@@ -681,10 +632,10 @@ td.total-marks {
 }
 
 nav a.active{
-    color: rgba(246, 255, 249, 0.35);
+    color: rgba(246, 249, 255, 0.35);
     border-radius: 10px;
     padding: 4px;
-    background: rgba(20, 90, 50, 0.35);
+    background: rgba(4, 85, 236, 0.35);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px); /* Safari support */
 
@@ -696,6 +647,10 @@ nav a.active{
     color:red
 }
 
+.value{
+    color:rgb(0, 55, 255)
+}
+
 nav a i {
     font-size: 22px;
     color: white;
@@ -703,7 +658,7 @@ nav a i {
 }
 
 nav a:hover i {
-    color: #00c853;
+    color: #2f00ff;
     transform: scale(1.15);
 }
 
@@ -851,7 +806,7 @@ nav a:hover i {
   align-items: center;
   justify-content: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #eef6f0;
+  background-color: #f4f7f6;
   padding: 40px;
   border-radius: 12px;
   width: 300px;
@@ -960,9 +915,9 @@ nav a:hover i {
   100% { opacity: .2; }
 }
 
-/* =========================================
+/* ==============================
    EMAIL LOADING OVERLAY
-   ========================================= */
+   ============================== */
 
 .email-loading-overlay {
     position: fixed;
@@ -973,9 +928,8 @@ nav a:hover i {
     justify-content: center;
     align-items: center;
 
-    background: rgba(11, 61, 46, 0.78);
+    background: rgba(7, 25, 55, 0.82);
     backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
 
     animation: overlayFadeIn 0.25s ease forwards;
 }
@@ -983,11 +937,6 @@ nav a:hover i {
 .email-loading-overlay.active {
     display: flex;
 }
-
-
-/* =========================================
-   CARD
-   ========================================= */
 
 .email-loading-box {
     width: min(90%, 390px);
@@ -1010,7 +959,7 @@ nav a:hover i {
     font-size: 22px;
     font-weight: 700;
 
-    color: var(--primary-dark);
+    color: #123b70;
 }
 
 .email-loading-box p {
@@ -1021,7 +970,7 @@ nav a:hover i {
     font-size: 14px;
     line-height: 1.6;
 
-    color: var(--text-muted);
+    color: #64748b;
 }
 
 .email-loading-box small {
@@ -1035,9 +984,9 @@ nav a:hover i {
 }
 
 
-/* =========================================
+/* ==============================
    EMAIL ICON
-   ========================================= */
+   ============================== */
 
 .email-animation {
     position: relative;
@@ -1065,22 +1014,27 @@ nav a:hover i {
 
     border-radius: 50%;
 
-    background: var(--primary);
+    background: #2563eb;
 
-    box-shadow: 0 8px 25px rgba(27, 94, 59, 0.4);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.35);
 
     animation: emailPulse 1.5s ease-in-out infinite;
 }
 
-.email-icon svg {
-    width: 30px;
-    height: 30px;
+.email-icon span {
+    color: white;
+
+    font-size: 31px;
+
+    line-height: 1;
+
+    transform: translateY(-1px);
 }
 
 
-/* =========================================
+/* ==============================
    ROTATING RING
-   ========================================= */
+   ============================== */
 
 .email-ring {
     position: absolute;
@@ -1091,16 +1045,16 @@ nav a:hover i {
     border-radius: 50%;
 
     border: 3px solid transparent;
-    border-top-color: var(--primary);
-    border-right-color: var(--primary-light);
+    border-top-color: #2563eb;
+    border-right-color: #60a5fa;
 
     animation: ringRotate 1s linear infinite;
 }
 
 
-/* =========================================
+/* ==============================
    LOADING DOTS
-   ========================================= */
+   ============================== */
 
 .loading-dots {
     margin-top: 20px;
@@ -1118,7 +1072,7 @@ nav a:hover i {
 
     border-radius: 50%;
 
-    background: var(--primary);
+    background: #2563eb;
 
     animation: dotBounce 1.2s infinite ease-in-out;
 }
@@ -1132,9 +1086,9 @@ nav a:hover i {
 }
 
 
-/* =========================================
+/* ==============================
    ANIMATIONS
-   ========================================= */
+   ============================== */
 
 @keyframes ringRotate {
     from {
@@ -1189,8 +1143,7 @@ nav a:hover i {
         transform: translateY(0) scale(1);
     }
 }
-
-/* ---------------- OTP Code Input (register / forgot password) ---------------- */
+/* ---------------- OTP Code Input (forgot password) ---------------- */
 
 .otp-boxes {
     position: relative;
@@ -1400,335 +1353,4 @@ nav a:hover i {
     .otp-boxes--error { animation: none !important; }
     .otp-boxes--success .otp-check { opacity: 1; transform: scale(1); }
     .otp-boxes--success .otp-check path { stroke-dashoffset: 0; }
-}
-
-/* ==========================================================
-   Dark mode
-   Toggled by adding data-theme="dark" to <html> (see base.html).
-   Overriding the core tokens cascades through every component
-   that already uses var(--white)/var(--primary-pale)/etc.
-   ========================================================== */
-
-html[data-theme="dark"] {
-    --primary-dark:   #DDEFE3;
-    --primary-pale:   #0E1712;
-    --white:          #17221B;
-    --text-dark:      #EAF3EE;
-    --text-muted:     #93A99B;
-    --border:         #263A2E;
-    --shadow:         0 4px 18px rgba(0, 0, 0, 0.45);
-}
-
-html[data-theme="dark"] body {
-    background: linear-gradient(160deg, #0E1712 0%, #0B120E 100%);
-}
-
-html[data-theme="dark"] .page-loading-overlay {
-    background: rgba(14, 23, 18, 0.97);
-}
-
-html[data-theme="dark"] tbody tr:hover td {
-    background: rgba(255, 255, 255, 0.06);
-}
-
-html[data-theme="dark"] tbody tr:nth-child(even) td {
-    background: rgba(255, 255, 255, 0.03);
-}
-
-html[data-theme="dark"] ::placeholder {
-    color: #5E7368;
-}
-
-html[data-theme="dark"] .error-box {
-    background: var(--white);
-    color: var(--text-dark);
-}
-
-/* ==========================================================
-   Profile page
-   ========================================================== */
-
-.profile-page {
-    max-width: 640px;
-    margin: 40px auto 60px;
-    padding: 0 20px;
-}
-
-.profile-hero {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary-mid));
-    border-radius: var(--radius);
-    padding: 44px 32px 68px;
-    text-align: center;
-    position: relative;
-}
-
-.profile-avatar {
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    background: var(--white);
-    color: var(--primary-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin: 0 auto 16px;
-    border: 4px solid var(--white);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-}
-
-.profile-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    padding: 0 28px 28px;
-    margin-top: -48px;
-    text-align: center;
-}
-
-.profile-name-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.profile-name {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin: 0;
-}
-
-.profile-edit-name-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    padding: 6px;
-    margin: 0;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: background 0.15s, color 0.15s;
-}
-
-.profile-edit-name-btn:hover {
-    background: var(--primary-pale);
-    color: var(--primary);
-    transform: none;
-}
-
-.profile-email {
-    color: var(--text-muted);
-    margin: 4px 0 0;
-    font-size: 0.95rem;
-}
-
-.profile-list {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    margin-top: 24px;
-    overflow: hidden;
-}
-
-.profile-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    background: none;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    width: 100%;
-    text-align: left;
-    color: var(--text-dark);
-    font-size: 0.98rem;
-    font-weight: 500;
-    cursor: pointer;
-    margin: 0;
-    border-radius: 0;
-    transition: background 0.15s;
-}
-
-a.profile-row {
-    text-decoration: none;
-    color: var(--text-dark);
-}
-
-.profile-list .profile-row:last-child {
-    border-bottom: none;
-}
-
-.profile-row:hover {
-    background: var(--primary-pale);
-    transform: none;
-}
-
-.profile-row-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    background: var(--primary-pale);
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.profile-row-label {
-    flex: 1;
-}
-
-.profile-row-value {
-    color: var(--text-muted);
-    font-weight: 400;
-    font-size: 0.92rem;
-    max-width: 55%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.profile-row-chevron {
-    color: var(--text-muted);
-    flex-shrink: 0;
-}
-
-.profile-row.danger .profile-row-icon {
-    background: #FDEDEC;
-    color: var(--error);
-}
-
-html[data-theme="dark"] .profile-row.danger .profile-row-icon {
-    background: rgba(198, 40, 40, 0.18);
-}
-
-.profile-row.danger .profile-row-label {
-    color: var(--error);
-}
-
-/* Dark-mode toggle switch */
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 46px;
-    height: 26px;
-    flex-shrink: 0;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-    position: absolute;
-}
-
-.switch-track {
-    position: absolute;
-    inset: 0;
-    background: var(--border);
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.switch-track::before {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    left: 3px;
-    top: 3px;
-    background: var(--white);
-    border-radius: 50%;
-    transition: transform 0.2s ease;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
-}
-
-.switch input:checked + .switch-track {
-    background: var(--primary);
-}
-
-.switch input:checked + .switch-track::before {
-    transform: translateX(20px);
-}
-
-.switch input:focus-visible + .switch-track {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
-
-/* Profile modals */
-
-.profile-modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    padding: 20px;
-}
-
-.profile-modal-overlay.show {
-    display: flex;
-}
-
-.profile-modal-box {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35);
-    width: 100%;
-    max-width: 400px;
-    padding: 28px 26px 24px;
-}
-
-.profile-modal-box h3 {
-    margin: 0 0 18px;
-    color: var(--text-dark);
-}
-
-.profile-modal-box label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-}
-
-.profile-modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 6px;
-}
-
-.profile-modal-actions button {
-    margin-top: 0;
-    flex: 1;
-}
-
-.profile-modal-actions .btn-cancel {
-    background: var(--primary-pale);
-    color: var(--text-dark);
-}
-
-@media (max-width: 480px) {
-    .profile-page {
-        margin-top: 20px;
-    }
-    .profile-hero {
-        padding: 32px 20px 60px;
-    }
 }
