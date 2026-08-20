@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, session, request, redirect, url_for, current_app, jsonify
-import random
+import hashlib
+import hmac
+import secrets
+import time
 import bcrypt as bp
 import os
 
@@ -29,51 +32,138 @@ def support():
 def forgot_password():
     if request.method == "POST":
         gmail = request.form.get("email", "").strip()
-        new_password = request.form.get("new_password", "").strip()
-        confirm_password = request.form.get("confirm_password", "").strip()
 
-        teacher = Teacher.query.filter(Teacher.Gmail == gmail).first()
-        
-        if not gmail or not new_password or not confirm_password:
-            return render_template("forgot_password.html", error="Please fill in all fields.")
+        if not gmail:
+            return render_template("forgot_password.html", error="Please enter your email address.")
 
-        if new_password != confirm_password:
-            return render_template("forgot_password.html", error="Passwords do not match.")
-
-        if not teacher:
+        account = Teacher.query.filter(Teacher.Gmail == gmail).first()
+        if not account:
             return render_template("forgot_password.html", error="No Teacher account found for that email.")
 
-        OTP=str(random.randint(1000,9999))
-        session["OTP"]=OTP
-        email(administrator1,gmail,"OTP verification",f"The OTP for {gmail} is  --{OTP}-- for changing password",dict_details[administrator1])
-        
-        return render_template("forgot_password_verification.html",username=gmail,password=new_password)
-        
+        # Store only the account identifier and OTP in the session.
+        # Never put a password in a URL or store a plaintext password in the session.
+        otp = str(secrets.randbelow(9000) + 1000)
+        otp_hash = hmac.new(
+            current_app.secret_key.encode("utf-8"),
+            otp.encode("utf-8"),
+            hashlib.sha256,
+        ).hexdigest()
+
+        session["reset_email"] = gmail
+        # Flask's default session is client-side, so never store the plaintext OTP.
+        session["reset_otp_hash"] = otp_hash
+        session["reset_otp_expires"] = time.time() + 300  # 5 minutes
+        session["reset_otp_attempts"] = 0
+        session.pop("reset_otp_verified", None)
+
+        email(
+            administrator1,
+            gmail,
+            "OTP verification",
+            f"The OTP for {gmail} is --{otp}-- for changing your password. It expires in 5 minutes.",
+            dict_details[administrator1],
+        )
+
+        return render_template("forgot_password_verification.html")
 
     return render_template("forgot_password.html")
 
-@pages_bp.route("/forgot_password_verification/<username>/<password>", methods=["POST", "GET"])
-def forgot_password_verification(username: str,password:str):
-        teacher = Teacher.query.filter(Teacher.Gmail == username).first()
-        if request.method=="POST":
-            if request.is_json:
-                data = request.get_json(silent=True) or {}
-                otp = data.get("onepass", "")
-            else:
-                otp = request.form.get("onepass", "")
 
-            if otp==session.get("OTP"):
-                teacher.password = bp.hashpw(password.encode(),bp.gensalt()).decode("utf-8") 
-                db.session.commit()
-                session.pop("OTP", None)
-                current_app.logger.info(f"Password reset requested for {username}")
-                if request.is_json:
-                    return jsonify({"success": True, "message": "Code verified.", "redirect": url_for("auth.login_page")})
-            else:
-                if request.is_json:
-                    return jsonify({"success": False, "message": "Incorrect OTP."}), 400
-                return render_template("Error.html", data="incorrect OTP.",location="/")
+@pages_bp.route("/forgot_password_verification", methods=["POST", "GET"])
+def forgot_password_verification():
+    if request.method == "GET":
+        if not session.get("reset_email") or not session.get("reset_otp_hash"):
+            return redirect(url_for("pages.forgot_password"))
+        return render_template("forgot_password_verification.html")
+
+    if request.is_json:
+        data = request.get_json(silent=True) or {}
+        otp = str(data.get("onepass", "")).strip()
+    else:
+        otp = request.form.get("onepass", "").strip()
+
+    stored_otp_hash = session.get("reset_otp_hash")
+    expires_at = session.get("reset_otp_expires", 0)
+    attempts = session.get("reset_otp_attempts", 0)
+
+    if not stored_otp_hash or time.time() > expires_at:
+        session.pop("reset_otp_hash", None)
+        session.pop("reset_otp_expires", None)
+        session.pop("reset_otp_attempts", None)
+        session.pop("reset_otp_verified", None)
+        message = "The OTP has expired. Please request a new one."
+        if request.is_json:
+            return jsonify({"success": False, "message": message}), 400
+        return render_template("Error.html", data=message, location=url_for("pages.forgot_password"))
+
+    if attempts >= 5:
+        session.pop("reset_otp_hash", None)
+        session.pop("reset_otp_expires", None)
+        session.pop("reset_otp_attempts", None)
+        session.pop("reset_otp_verified", None)
+        message = "Too many incorrect attempts. Please request a new OTP."
+        if request.is_json:
+            return jsonify({"success": False, "message": message}), 400
+        return render_template("Error.html", data=message, location=url_for("pages.forgot_password"))
+
+    submitted_otp_hash = hmac.new(
+        current_app.secret_key.encode("utf-8"),
+        otp.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+    if not secrets.compare_digest(submitted_otp_hash, str(stored_otp_hash)):
+        session["reset_otp_attempts"] = attempts + 1
+        message = "Incorrect OTP."
+        if request.is_json:
+            return jsonify({"success": False, "message": message}), 400
+        return render_template("Error.html", data=message, location=url_for("pages.forgot_password"))
+
+    session["reset_otp_verified"] = True
+    session.pop("reset_otp_hash", None)
+    session.pop("reset_otp_expires", None)
+    session.pop("reset_otp_attempts", None)
+
+    if request.is_json:
+        return jsonify({"success": True, "message": "Code verified.", "redirect": url_for("pages.reset_password")})
+
+    return redirect(url_for("pages.reset_password"))
+
+
+@pages_bp.route("/reset_password", methods=["GET", "POST"], endpoint="reset_password")
+def reset_password():
+    if not session.get("reset_otp_verified") or not session.get("reset_email"):
+        return redirect(url_for("pages.forgot_password"))
+
+    if request.method == "POST":
+        new_password = request.form.get("new_password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if not new_password or not confirm_password:
+            return render_template("reset_password.html", error="Please fill in all fields.")
+
+        if new_password != confirm_password:
+            return render_template("reset_password.html", error="Passwords do not match.")
+
+        if len(new_password) < 8:
+            return render_template("reset_password.html", error="New password must contain at least 8 characters.")
+
+        gmail = session.get("reset_email")
+        account = Teacher.query.filter(Teacher.Gmail == gmail).first()
+        if not account:
+            session.pop("reset_email", None)
+            session.pop("reset_otp_verified", None)
+            return redirect(url_for("pages.forgot_password"))
+
+        account.password = bp.hashpw(new_password.encode(), bp.gensalt()).decode("utf-8")
+        db.session.commit()
+
+        session.pop("reset_email", None)
+        session.pop("reset_otp_verified", None)
+        current_app.logger.info(f"Password reset completed for {gmail}")
         return redirect(url_for("auth.login_page"))
+
+    return render_template("reset_password.html")
 
 @pages_bp.route("/profile", endpoint="profile")
 @login_required

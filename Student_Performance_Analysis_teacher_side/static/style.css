@@ -49,6 +49,10 @@ h1, h2, h3 {
 /* ---------------- Navbar / Header ---------------- */
 
 .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
     background: linear-gradient(90deg, #0A2E52 0%, #1565A6 55%, #2E8BC9 100%);
     color: var(--white);
     padding: 20px 40px;
