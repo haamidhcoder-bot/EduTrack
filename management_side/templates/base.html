@@ -125,7 +125,7 @@
             overlay.classList.add("show");
         }
     </script>
-    <div class="navbar">
+    <div class="navbar topbar-mobile">
         <div class="brand">SCHOOL PERFORMANCE ANALYSIS</div>
   
         <nav class="dock-nav">
@@ -156,6 +156,41 @@
 
         </nav>
     </div>
-    {%block body%}{%endblock%}
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-brand">SCHOOL PERFORMANCE ANALYSIS</div>
+            <nav class="sidebar-nav">
+                <a href="/home" class="sidebar-item {% if request.path=='/home'or request.path=='/show_students' or request.path=='/' or request.path=='/export_csv' %}active{% endif %}">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+
+                <a href="/teachers_data" class="sidebar-item {% if request.path=='/teachers_data' %}active{% endif %}">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <span>Teachers</span>
+                </a>
+
+                <a href="/attendance" class="sidebar-item {% if request.path=='/attendance' %}active{% endif %}">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+
+                <a href="/about" class="sidebar-item {% if request.path=='/about' %}active{% endif %}">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>About Us</span>
+                </a>
+
+                <a href="/profile" class="sidebar-item {% if request.path=='/profile' %}active{% endif %}">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div class="app-main">
+            {%block body%}{%endblock%}
+        </div>
+    </div>
 </body>
 </html>

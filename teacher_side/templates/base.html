@@ -283,7 +283,7 @@
             overlay.classList.add("show");
         }
     </script>
-    <div class="navbar">
+    <div class="navbar topbar-mobile">
         <div class="brand">SCHOOL PERFORMANCE ANALYSIS</div>
   
         <nav class="dock-nav">
@@ -313,103 +313,139 @@
             </a>
 
         </nav>
-        {%if request.path!="/about" and request.path!="/profile" and request.path!="/settings"  and request.path!="/profile-details"%}
-        <button type="button" class="chat-button" id="aiChatToggle">
-            <img src="{{ url_for('static', filename='images/Gemini.png') }}" alt="Ask AI">
-            <span class="ai-text">Ask AI</span>
-
-        </button>
-
-        <div class="chat-panel" id="aiChatPanel">
-            <div class="chat-panel-header">
-                <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
-                <div class="chat-title">Mb AI Buddy</div>
-                <button type="button" class="chat-panel-close" id="aiChatClose" aria-label="Close">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="chat-panel-body" id="aiChatBody">
-                <div class="chat-msg bot">Hi! I'm your AI Buddy. Ask me anything about student records, marks or attendance.</div>
-            </div>
-            <div class="chat-panel-footer">
-                <input type="text" id="aiChatInput" placeholder="Type here..." autocomplete="off">
-                <button type="button" class="chat-send-btn" id="aiChatSend" aria-label="Send">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-
-        <script>
-        (function () {
-            var toggleBtn = document.getElementById('aiChatToggle');
-            var closeBtn = document.getElementById('aiChatClose');
-            var panel = document.getElementById('aiChatPanel');
-            var body = document.getElementById('aiChatBody');
-            var input = document.getElementById('aiChatInput');
-            var sendBtn = document.getElementById('aiChatSend');
-
-            function openPanel() {
-                panel.classList.add('open');
-                input.focus();
-            }
-
-            function closePanel() {
-                panel.classList.remove('open');
-            }
-
-            function togglePanel() {
-                panel.classList.contains('open') ? closePanel() : openPanel();
-            }
-
-            function addMessage(text, sender) {
-                var msg = document.createElement('div');
-                msg.className = 'chat-msg ' + sender;
-                msg.textContent = text;
-                body.appendChild(msg);
-                body.scrollTop = body.scrollHeight;
-                return msg;
-            }
-
-            function sendMessage() {
-                var question = input.value.trim();
-                if (!question) return;
-
-                addMessage(question, 'user');
-                input.value = '';
-                sendBtn.disabled = true;
-
-                var typingMsg = addMessage('Typing...', 'typing');
-
-                fetch('/chatbot', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: question })
-                })
-                .then(function (res) { return res.json(); })
-                .then(function (data) {
-                    typingMsg.remove();
-                    addMessage(data.answer || "Sorry, I couldn't find an answer.", 'bot');
-                })
-                .catch(function () {
-                    typingMsg.remove();
-                    addMessage('Something went wrong. Please try again.', 'bot');
-                })
-                .finally(function () {
-                    sendBtn.disabled = false;
-                });
-            }
-
-            toggleBtn.addEventListener('click', togglePanel);
-            closeBtn.addEventListener('click', closePanel);
-            sendBtn.addEventListener('click', sendMessage);
-            input.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') sendMessage();
-            });
-        })();
-        </script>
-        {%endif%}
     </div>
-    {%block body%}{%endblock%}
+
+    {%if request.path!="/about" and request.path!="/profile" and request.path!="/settings"  and request.path!="/profile-details"%}
+    <button type="button" class="chat-button" id="aiChatToggle">
+        <img src="{{ url_for('static', filename='images/Gemini.png') }}" alt="Ask AI">
+        <span class="ai-text">Ask AI</span>
+    </button>
+
+    <div class="chat-panel" id="aiChatPanel">
+        <div class="chat-panel-header">
+            <div class="chat-avatar"><i class="fa-solid fa-robot"></i></div>
+            <div class="chat-title">Mb AI Buddy</div>
+            <button type="button" class="chat-panel-close" id="aiChatClose" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="chat-panel-body" id="aiChatBody">
+            <div class="chat-msg bot">Hi! I'm your AI Buddy. Ask me anything about student records, marks or attendance.</div>
+        </div>
+        <div class="chat-panel-footer">
+            <input type="text" id="aiChatInput" placeholder="Type here..." autocomplete="off">
+            <button type="button" class="chat-send-btn" id="aiChatSend" aria-label="Send">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+    (function () {
+        var toggleBtn = document.getElementById('aiChatToggle');
+        var closeBtn = document.getElementById('aiChatClose');
+        var panel = document.getElementById('aiChatPanel');
+        var body = document.getElementById('aiChatBody');
+        var input = document.getElementById('aiChatInput');
+        var sendBtn = document.getElementById('aiChatSend');
+
+        function openPanel() {
+            panel.classList.add('open');
+            input.focus();
+        }
+
+        function closePanel() {
+            panel.classList.remove('open');
+        }
+
+        function togglePanel() {
+            panel.classList.contains('open') ? closePanel() : openPanel();
+        }
+
+        function addMessage(text, sender) {
+            var msg = document.createElement('div');
+            msg.className = 'chat-msg ' + sender;
+            msg.textContent = text;
+            body.appendChild(msg);
+            body.scrollTop = body.scrollHeight;
+            return msg;
+        }
+
+        function sendMessage() {
+            var question = input.value.trim();
+            if (!question) return;
+
+            addMessage(question, 'user');
+            input.value = '';
+            sendBtn.disabled = true;
+
+            var typingMsg = addMessage('Typing...', 'typing');
+
+            fetch('/chatbot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: question })
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                typingMsg.remove();
+                addMessage(data.answer || "Sorry, I couldn't find an answer.", 'bot');
+            })
+            .catch(function () {
+                typingMsg.remove();
+                addMessage('Something went wrong. Please try again.', 'bot');
+            })
+            .finally(function () {
+                sendBtn.disabled = false;
+            });
+        }
+
+        toggleBtn.addEventListener('click', togglePanel);
+        closeBtn.addEventListener('click', closePanel);
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+    })();
+    </script>
+    {%endif%}
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="sidebar-brand">SCHOOL PERFORMANCE ANALYSIS</div>
+            <nav class="sidebar-nav">
+                <a href="/home" class="sidebar-item {% if request.path=='/home'or request.path=='/show_results' or request.path=='/' %}active{% endif %}">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
+                </a>
+
+                <a href="/leaderboard" class="sidebar-item {% if request.path=='/leaderboard' %}active{% endif %}">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Leaderboard</span>
+                </a>
+
+                <a href="/attendence" class="sidebar-item {% if request.path=='/attendence' %}active{% endif %}">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+
+                <a href="/about" class="sidebar-item {% if request.path=='/about' %}active{% endif %}">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>About Us</span>
+                </a>
+
+                <a href="/profile" class="sidebar-item {% if request.path=='/profile' %}active{% endif %}">
+                    <i class="fa-solid fa-circle-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+        </aside>
+
+        <div class="app-main">
+            {%block body%}{%endblock%}
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='js/bg-email-watcher.js') }}"></script>
 </body>
 </html>

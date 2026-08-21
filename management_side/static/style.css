@@ -272,6 +272,257 @@ h1, h2, h3 {
     box-shadow: var(--shadow);
 }
 
+/* ---------------- Premium login polish ---------------- */
+
+.login-box .login-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    margin: -22px 0 26px;
+}
+
+.login-box h1.has-underline::after {
+    content: "";
+    display: block;
+    width: 44px;
+    height: 3px;
+    margin: 10px auto 0;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--primary-light), var(--white));
+}
+
+.login-box button.login-btn {
+    background: linear-gradient(135deg, var(--white) 0%, var(--primary-light) 160%);
+    box-shadow: 0 8px 20px rgba(6, 20, 46, 0.28);
+}
+
+.login-box button.login-btn:hover {
+    background: linear-gradient(135deg, var(--primary-pale) 0%, var(--white) 160%);
+    box-shadow: 0 10px 26px rgba(6, 20, 46, 0.34);
+}
+
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 18px 0;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.login-box .btn-secondary-outline {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 26px;
+    padding: 13px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    margin-top: 0;
+}
+
+.login-box .btn-secondary-outline:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-1px);
+}
+
+.login-box .btn-secondary-outline svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* ---------------- Premium date & time fields ---------------- */
+/* Pill-shaped input wrapper with a circular icon badge, used for
+   date/time pickers (e.g. student DOB, attendance month). */
+
+.premium-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--primary-pale);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0 14px;
+    margin-bottom: 15px;
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.premium-field:focus-within {
+    border-color: var(--primary-mid);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.22);
+}
+
+.premium-field .premium-field-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--primary);
+    flex-shrink: 0;
+    transition: background .15s ease, color .15s ease;
+    box-shadow: 0 2px 6px rgba(11, 61, 46, 0.12);
+}
+
+.premium-field:focus-within .premium-field-icon {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.premium-field input {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 13px 2px !important;
+    box-shadow: none !important;
+    min-width: 0;
+}
+
+.premium-field-label {
+    position: absolute;
+    top: -9px;
+    left: 12px;
+    background: var(--white);
+    padding: 0 6px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--primary);
+    border-radius: 6px;
+    margin: 0;
+}
+
+html.dark-mode .premium-field-label,
+body.dark-mode .premium-field-label {
+    background: var(--card-bg, #171a20);
+}
+
+html.dark-mode .premium-field .premium-field-icon,
+body.dark-mode .premium-field .premium-field-icon {
+    background: var(--card-bg, #171a20);
+}
+
+/* ---------------- Premium sidebar layout ---------------- */
+
+.app-shell {
+    display: flex;
+    align-items: stretch;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 26px 16px 20px;
+    background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary) 100%);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 10px;
+    color: #EAFBEF;
+    font-size: 1rem;
+    font-weight: 800;
+    font-style: italic;
+    line-height: 1.25;
+    letter-spacing: 0.3px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.72);
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar-item i {
+    font-size: 17px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    text-decoration: none;
+    transform: translateX(2px);
+}
+
+.sidebar-item.active {
+    background: rgba(255, 255, 255, 0.18);
+    color: var(--white);
+    box-shadow: inset 3px 0 0 var(--primary-light);
+}
+
+.app-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar-mobile {
+    display: none;
+}
+
+@media (max-width: 860px) {
+    .sidebar {
+        display: none;
+    }
+    .topbar-mobile {
+        display: flex;
+    }
+}
+
+@media (min-width: 861px) {
+    .topbar-mobile {
+        display: none;
+    }
+}
+
 /* ---------------- Forms ---------------- */
 
 form label {

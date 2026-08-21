@@ -102,38 +102,87 @@
 
 .account-menu {
     margin-top: 8px;
+    padding: 6px 10px 10px;
     border-top: 1px solid var(--account-border, #e7e9ef);
 }
 
+/* Premium sidebar-style menu rows: rounded pill items with a soft
+   gradient hover/active state and a boxed icon, instead of plain
+   divider rows. */
 .account-menu-item {
-    min-height: 70px;
+    min-height: 66px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    padding: 0 24px;
-    border-bottom: 1px solid var(--account-border, #e7e9ef);
+    padding: 0 14px;
+    margin: 4px 0;
+    border-bottom: none;
+    border-radius: 14px;
     color: inherit;
     text-decoration: none !important;
-    transition: background .2s ease;
+    position: relative;
+    transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+
+.account-menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14%;
+    bottom: 14%;
+    width: 3px;
+    border-radius: 3px;
+    background: var(--account-accent);
+    opacity: 0;
+    transition: opacity .2s ease;
 }
 
 .account-menu-item:hover {
-    background: rgba(var(--account-accent-rgb), .08);
+    background: linear-gradient(90deg, rgba(var(--account-accent-rgb), .12), rgba(var(--account-accent-rgb), .03));
+    transform: translateX(3px);
+    box-shadow: 0 6px 16px rgba(var(--account-accent-rgb), .12);
+}
+
+.account-menu-item:hover::before {
+    opacity: 1;
 }
 
 .account-menu-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     font-size: 15px;
     font-weight: 600;
 }
 
 .account-menu-icon {
-    width: 22px;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: rgba(var(--account-accent-rgb), .1);
     color: var(--account-accent);
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.account-menu-item:hover .account-menu-icon {
+    background: linear-gradient(135deg, var(--account-accent-strong), var(--account-accent));
+    color: #fff;
+    transform: scale(1.06);
+}
+
+.account-logout:hover .account-menu-icon {
+    background: linear-gradient(135deg, #c62828, #e57373);
+    color: #fff;
+}
+
+.account-logout:hover::before {
+    background: #c62828;
 }
 
 .account-chevron {
@@ -242,6 +291,7 @@
     border: 1px solid var(--account-border, #e7e9ef);
     border-radius: 18px;
     background: var(--card-bg, #fff);
+    padding: 6px;
 }
 
 .account-setting-row {
@@ -250,14 +300,19 @@
     align-items: center;
     justify-content: space-between;
     gap: 18px;
-    padding: 0 22px;
-    border-bottom: 1px solid var(--account-border, #e7e9ef);
+    padding: 0 16px;
+    margin: 3px 0;
+    border-bottom: none;
+    border-radius: 14px;
     text-decoration: none !important;
     color: inherit;
+    transition: background .2s ease, transform .2s ease;
 }
 
-.account-setting-row:last-child { border-bottom: 0; }
-.account-setting-row:hover { background: rgba(var(--account-accent-rgb), .08); }
+.account-setting-row:hover {
+    background: linear-gradient(90deg, rgba(var(--account-accent-rgb), .12), rgba(var(--account-accent-rgb), .03));
+    transform: translateX(3px);
+}
 
 .setting-title { font-weight: 700; }
 .setting-description { margin-top: 4px; color: var(--account-muted, #80838b); font-size: 13px; }

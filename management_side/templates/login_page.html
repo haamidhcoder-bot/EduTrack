@@ -11,7 +11,8 @@
 <body>
     <div class="login-wrapper">
         <div class="login-box">
-          <h1>Login</h1>
+          <h1 class="has-underline">Welcome Back</h1>
+          <p class="login-subtitle">Login to your account</p>
           {% if request.args.get('account_deleted') %}<div class="alert alert-success">Your account has been deleted.</div>{% endif %}
           <form method="POST">
             <input type="email" name="username" class="icon-email" placeholder="Email ID" required>
@@ -35,16 +36,17 @@
             style="position:absolute; left:-9999px; top:-9999px;">
         </video>
 
+            <div class="login-divider">or</div>
 
-        <!-- Capture face -->
+            <!-- Capture face -->
 
-        <button
-            type="button"
-            onclick="capture()">
-
-            Login with Face ID
-
-        </button>
+            <button
+                type="button"
+                class="btn-secondary-outline"
+                onclick="capture()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4M15 3h4a2 2 0 0 1 2 2v4M9 21H5a2 2 0 0 1-2-2v-4M15 21h4a2 2 0 0 0 2-2v-4M8 9v3a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4V9"></path></svg>
+                Login with Face ID
+            </button>
 
           </form>
           <canvas id="canvas" style="display:none;"></canvas>
