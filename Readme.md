@@ -125,11 +125,7 @@ pip install -r requirements.txt
 
 EduTrack uses MySQL as its database.
 
-Both applications create the `schooldb` database automatically on first run if it does not already exist, so run create_database.py
-
-```bash
-python create_database.py
-```
+Both applications create the `schooldb` database automatically on first run if it does not already exist.
 
 Configure the database connection, session keys, email credentials, and the Gemini API key in `shared/config.py` according to your environment.
 
