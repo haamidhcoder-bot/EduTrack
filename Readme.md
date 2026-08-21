@@ -245,7 +245,7 @@ The application supports email functionality for system-related communication, i
 <img src="images/leaderboard.png" alt="EduTrack Leaderboard" width="800">
 
 ## Attendance Teacher
-<img src="images/attendance-teacher.png" alt="EduTrack Attendance Teacher" width="800">
+<img src="images/attendance-teachers.png" alt="EduTrack Attendance Teacher" width="800">
 
 ## Attendance Management
 <img src="images/attendance-management.png" alt="EduTrack Attendance Management"" width="800">
