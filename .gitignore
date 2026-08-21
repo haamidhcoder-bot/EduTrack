@@ -1,4 +1,4 @@
 App.log
 *.csv
-data_db/
-*.sqlite3
+images/
+*.png
