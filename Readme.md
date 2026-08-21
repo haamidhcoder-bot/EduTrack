@@ -255,6 +255,9 @@ The application supports email functionality for system-related communication, i
 ## Teachers Data
 <img src="images/teachers-data.png" alt="EduTrack Teachers data" width="800">
 
+## AI Assistance
+<img src="images/AI Assistance.png" alt="EduTrack AI Assistance" width="800">
+
 ## Contributing
 
 Contributions are welcome.
