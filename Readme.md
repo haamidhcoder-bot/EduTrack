@@ -1,24 +1,26 @@
-# Student Performance Analysis
+# EduTrack
 
-A web-based student performance management system designed to help schools manage student information, marks, attendance, examinations, and performance analysis.
+EduTrack is a web-based student management and performance analysis platform designed to help schools manage students, teachers, examinations, marks, attendance, and academic performance through a centralized system.
 
-## 🚀 Features
+## Features
 
-*  Teacher-side dashboard
-*  Management-side dashboard
-*  Student information management
-*  Student performance analysis
-*  Marks management
-*  Attendance management
-*  Performance charts and graphs
-*  Class leaderboard
-*  CSV student data import
-*  User authentication
-*  AI-powered student data assistance
-*  Email functionality
-*  Application logging
+* Teacher-side dashboard
+* Management-side dashboard
+* Student information management
+* Teacher management
+* Marks management
+* Attendance management
+* Examination management
+* Student performance analysis
+* Performance charts and graphs
+* Class leaderboard
+* CSV student data import
+* User authentication
+* AI-assisted student data interaction
+* Email functionality
+* Application logging
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 ### Backend
 
@@ -34,15 +36,17 @@ A web-based student performance management system designed to help schools manag
 * JavaScript
 * Bootstrap
 
-### Other Tools
+### Libraries and Tools
 
 * Pandas
-* Git & GitHub
+* MySQL Connector
+* Git
+* GitHub
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
-Student_Performance_Analysis/
+EduTrack/
 │
 ├── teacher_side/
 │   ├── routes/
@@ -66,18 +70,18 @@ Student_Performance_Analysis/
 └── README.md
 ```
 
-## ⚙️ Installation
+## Installation
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/Student_Performance_Analysis.git
+git clone https://github.com/haamidhcoder-bot/EduTrack.git
 ```
 
-### 2. Open the project
+### 2. Navigate to the project directory
 
 ```bash
-cd Student_Performance_Analysis
+cd EduTrack
 ```
 
 ### 3. Create a virtual environment
@@ -88,21 +92,21 @@ python -m venv .venv
 
 ### 4. Activate the virtual environment
 
-Windows:
+On Windows:
 
 ```bash
 .venv\Scripts\activate
 ```
 
-### 5. Install dependencies
+### 5. Install the required dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 🗄️ Database Setup
+## Database Setup
 
-Make sure MySQL is installed and running.
+EduTrack uses MySQL as its database.
 
 Create the database:
 
@@ -110,11 +114,11 @@ Create the database:
 CREATE DATABASE schooldb;
 ```
 
-Configure your database connection in the project's configuration file.
+Configure the database connection according to your environment.
 
-> Never upload database passwords or API keys to GitHub.
+Do not commit database passwords, API keys, secret keys, or other sensitive information to the repository.
 
-## ▶️ Running the Application
+## Running the Application
 
 Activate the virtual environment:
 
@@ -122,57 +126,58 @@ Activate the virtual environment:
 .venv\Scripts\activate
 ```
 
-Then start the Flask application:
+Start the Flask application:
 
 ```bash
 python app.py
 ```
 
-Open the application in your browser:
+The application can then be accessed at:
 
 ```text
 http://127.0.0.1:5000
 ```
 
-## 📊 Main Modules
+## Teacher Side
 
-### Teacher Side
+The teacher side provides functionality for:
 
-Teachers can:
+* Viewing students
+* Managing marks
+* Recording attendance
+* Viewing examination results
+* Analyzing student performance
+* Viewing class rankings
+* Monitoring academic progress
 
-* View students
-* Enter marks
-* Manage attendance
-* View student performance
-* View class rankings
-* Analyze examination results
+## Management Side
 
-### Management Side
+The management side provides functionality for:
 
-Management can:
+* Managing students
+* Managing teachers
+* Managing classes and sections
+* Managing examinations
+* Monitoring attendance
+* Viewing academic performance
+* Managing school-related information
 
-* Manage teachers
-* Manage students
-* Manage classes and sections
-* View overall performance
-* Monitor attendance
-* Manage examinations
+## Performance Analysis
 
-## 🔒 Security
+EduTrack provides several tools for analyzing academic performance, including:
 
-The application should:
+* Student performance summaries
+* Subject-wise marks
+* Examination results
+* Class rankings
+* Performance graphs
+* Attendance information
 
-* Store passwords securely
-* Keep secret keys outside the source code
-* Never expose database credentials
-* Validate uploaded files
-* Validate user input
-* Use sessions for authentication
-* Prevent unauthorized access to protected routes
+These features help teachers and management monitor student progress and make better academic decisions.
 
-## 📁 CSV Import
+## CSV Import
 
-The system supports importing student information through CSV files.
+EduTrack supports importing student information using CSV files.
 
 Example:
 
@@ -182,22 +187,58 @@ roll_no,student_name,class,section,student_gmail,DOB,mobile_no
 1002,Jane Smith,10,A,jane@gmail.com,2009-08-20,9876543211
 ```
 
-## 🤝 Contributing
+## Security
+
+EduTrack follows security practices such as:
+
+* Session-based authentication
+* Protected routes
+* Input validation
+* CSV validation
+* Secure credential management
+* Prevention of unauthorized access
+
+Sensitive information such as passwords, API keys, and secret keys should be stored outside the source code.
+
+## AI Assistance
+
+EduTrack includes an AI-assisted interface for interacting with student data and obtaining useful information from the school's database.
+
+## Email Functionality
+
+The application supports email functionality for system-related communication, including sending generated files and notifications.
+
+## Contributing
 
 Contributions are welcome.
 
 1. Fork the repository.
-2. Create a new branch.
+2. Create a new branch:
+
+```bash
+git checkout -b feature/your-feature
+```
+
 3. Make your changes.
-4. Commit your changes.
-5. Push the branch.
+4. Commit your changes:
+
+```bash
+git commit -m "Add your feature"
+```
+
+5. Push the branch:
+
+```bash
+git push origin feature/your-feature
+```
+
 6. Create a Pull Request.
 
-## 📜 License
+## License
 
 This project is licensed under the MIT License.
 
-## 👨‍💻 Author
+## Author
 
 **Haamidh Mohideen**
 
