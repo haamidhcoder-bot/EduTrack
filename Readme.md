@@ -230,6 +230,20 @@ EduTrack includes an AI-assisted interface for interacting with student data and
 
 The application supports email functionality for system-related communication, including OTP-based password resets, sending generated files, and notifications.
 
+## Screenshots
+
+### Login Page
+<img src="images/login.png" alt="EduTrack Login Page" width="800">
+
+### Teacher Dashboard
+<img src="images/teacher-dashboard.png" alt="EduTrack Teacher Dashboard" width="800">
+
+### Management Dashboard
+<img src="images/management-dashboard.png" alt="EduTrack Management Dashboard" width="800">
+
+### Leaderboard
+<img src="images/leaderboard.png" alt="EduTrack Leaderboard" width="800">
+
 ## Contributing
 
 Contributions are welcome.
