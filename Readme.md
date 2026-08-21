@@ -244,6 +244,9 @@ The application supports email functionality for system-related communication, i
 ### Leaderboard
 <img src="images/leaderboard.png" alt="EduTrack Leaderboard" width="800">
 
+## Attendance
+<img src="images/attendance.png" alt="EduTrack Leaderboard" width="800">
+
 ## Contributing
 
 Contributions are welcome.
