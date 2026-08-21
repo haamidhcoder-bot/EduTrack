@@ -204,9 +204,11 @@ EduTrack supports importing student information using CSV files.
 Example:
 
 ```csv
-roll_no,student_name,class,section,student_gmail,DOB,mobile_no
-1001,John Smith,10,A,john@gmail.com,2009-05-12,9876543210
-1002,Jane Smith,10,A,jane@gmail.com,2009-08-20,9876543211
+student_name,student_gmail,DOB,mobile_no
+John Singh,JohnSingh@gmail.com,2019-08-09,9722646238
+Arjun Jackson,ArjunJackson@gmail.com,2015-08-11,7214475883
+Vikram Brown,VikramBrown@gmail.com,2019-12-02,8370735411
+William Smith,WilliamSmith@gmail.com,2008-01-07,6721490718
 ```
 
 ## Security
