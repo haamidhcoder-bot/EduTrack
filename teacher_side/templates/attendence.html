@@ -222,6 +222,7 @@
       </h2>
     </div>
 
+    {%if students%}
     <div class="attendance-toolbar">
         <input type="text" class="attendance-search" placeholder="Search by name or roll no" id="attendanceSearch">
         <div class="attendance-toolbar-right">
@@ -256,6 +257,9 @@
             <button type="submit" class="save-btn">Save attendance</button>
         </div>
     </form>
+    {%else%}
+    <h4>There is no data to show</h4>
+    {%endif%}
 </div>
 
 <script>

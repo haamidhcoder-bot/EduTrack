@@ -331,12 +331,6 @@ def add_teacher():
             class_teacher=request.form.get("class_teacher","").strip()
             class_teacher_sec=request.form.get("class_teacher_sec","").strip()
             confirm_password = request.form.get("confirm_password", "").strip()
-            image = request.files.get("face")
-
-            if not image:
-                return "No image received", 400
-
-            face_filename = save_face(image)
 
             teacher=Teacher.query.filter(Teacher.class_teacher==class_teacher,
                                   Teacher.class_teacher_sec==class_teacher_sec
@@ -348,7 +342,7 @@ def add_teacher():
             print(teacher)
 
             if not teacher:
-                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec,face_id=face_filename)
+                verification=create_account(user=username,password=password,confirm_password=confirm_password,Table=Teacher,class_teacher=class_teacher,class_teacher_sec=class_teacher_sec,face_id=None)
 
                 if not verification:
                     return render_template("Error.html", data="duplicate entry.",location="/add_teacher")

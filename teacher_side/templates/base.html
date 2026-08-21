@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/teacher_side.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Edutrack.png') }}">
     <script>
         (function () {
             var dark = localStorage.getItem("spa-dark-mode") === "true";
@@ -284,7 +284,7 @@
         }
     </script>
     <div class="navbar topbar-mobile">
-        <div class="brand">SCHOOL PERFORMANCE ANALYSIS</div>
+        <div class="brand">EDUTRACK</div>
   
         <nav class="dock-nav">
             <a href="/home" class="dock-item {% if request.path=='/home'or request.path=='/show_results' or request.path=='/' %}active{% endif %}">
@@ -412,7 +412,7 @@
 
     <div class="app-shell">
         <aside class="sidebar">
-            <div class="sidebar-brand">SCHOOL PERFORMANCE ANALYSIS</div>
+            <div class="sidebar-brand">EDUTRACK</div>
             <nav class="sidebar-nav">
                 <a href="/home" class="sidebar-item {% if request.path=='/home'or request.path=='/show_results' or request.path=='/' %}active{% endif %}">
                     <i class="fa-solid fa-house"></i>

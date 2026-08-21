@@ -192,8 +192,10 @@
 
         </div>
 
-        {% if not class_value and not sec%}
-        <h4>Enter a class above to get started.</h4>
+        {% if not class_value or not sec%}
+        <h4>Enter the required details.</h4>
+        {%elif not students%}
+        <h4>No students data available.</h4>
         {% elif sub == "All" %}
         <h4>All subjects &mdash; {{ exam }}</h4>
         <div class="table-toolbar">
