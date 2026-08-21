@@ -14,8 +14,8 @@ EduTrack is a web-based student management and performance analysis platform des
 * Student performance analysis
 * Performance charts and graphs
 * Class leaderboard
-* CSV student data import
-* User authentication
+* CSV student data import and export
+* User authentication, including Face ID login
 * AI-assisted student data interaction
 * Email functionality
 * Application logging
@@ -34,12 +34,15 @@ EduTrack is a web-based student management and performance analysis platform des
 * HTML
 * CSS
 * JavaScript
-* Bootstrap
+* Font Awesome
 
 ### Libraries and Tools
 
-* Pandas
-* MySQL Connector
+* Pandas, NumPy
+* Matplotlib, Seaborn
+* OpenCV, Pillow
+* MySQL Connector / PyMySQL
+* Google Generative AI (Gemini)
 * Git
 * GitHub
 
@@ -49,23 +52,31 @@ EduTrack is a web-based student management and performance analysis platform des
 EduTrack/
 │
 ├── teacher_side/
-│   ├── routes/
+│   ├── app/
+│   │   ├── routes/
+│   │   └── __init__.py
 │   ├── templates/
 │   ├── static/
-│   └── app.py
+│   └── run_teacher.py
 │
 ├── management_side/
-│   ├── routes/
+│   ├── app/
+│   │   ├── routes/
+│   │   └── __init__.py
 │   ├── templates/
 │   ├── static/
-│   └── app.py
+│   └── run_management.py
 │
 ├── shared/
 │   ├── config.py
-│   ├── models.py
-│   └── ...
+│   ├── extensions.py
+│   ├── models/
+│   ├── services/
+│   └── utils/
 │
+├── sample_data/
 ├── requirements.txt
+├── create_database.py
 ├── .gitignore
 └── README.md
 ```
@@ -98,6 +109,12 @@ On Windows:
 .venv\Scripts\activate
 ```
 
+On macOS/Linux:
+
+```bash
+source .venv/bin/activate
+```
+
 ### 5. Install the required dependencies
 
 ```bash
@@ -108,34 +125,43 @@ pip install -r requirements.txt
 
 EduTrack uses MySQL as its database.
 
-Create the database:
+Both applications create the `schooldb` database automatically on first run if it does not already exist, so run create_database.py
 
-```sql
-CREATE DATABASE schooldb;
+```bash
+python create_database.py
 ```
 
-Configure the database connection according to your environment.
+Configure the database connection, session keys, email credentials, and the Gemini API key in `shared/config.py` according to your environment.
 
 Do not commit database passwords, API keys, secret keys, or other sensitive information to the repository.
 
+(Optional) Populate the database with sample data:
+
+```bash
+python sample_data/populate_school_database.py
+```
+
 ## Running the Application
 
-Activate the virtual environment:
+EduTrack is split into two separate Flask applications that run independently and share the same database. Activate the virtual environment first, then start each side from the project root.
+
+Management side:
 
 ```bash
-.venv\Scripts\activate
+python management_side/run_management.py
 ```
 
-Start the Flask application:
+Teacher side:
 
 ```bash
-python app.py
+python teacher_side/run_teacher.py
 ```
 
-The application can then be accessed at:
+The applications can then be accessed at:
 
 ```text
-http://127.0.0.1:5000
+Management side: http://127.0.0.1:5000
+Teacher side:     http://127.0.0.1:8000
 ```
 
 ## Teacher Side
@@ -206,7 +232,7 @@ EduTrack includes an AI-assisted interface for interacting with student data and
 
 ## Email Functionality
 
-The application supports email functionality for system-related communication, including sending generated files and notifications.
+The application supports email functionality for system-related communication, including OTP-based password resets, sending generated files, and notifications.
 
 ## Contributing
 
