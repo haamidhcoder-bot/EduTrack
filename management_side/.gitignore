@@ -1,6 +1,3 @@
 __pycache__/
 *.pyc
 *.pyo
-app.log
-outline.txt
-original_app.py

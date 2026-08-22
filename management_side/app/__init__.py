@@ -17,12 +17,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def create_app():
-    # Same as the original module-level code: make sure the database exists
-    # before SQLAlchemy tries to use it.
-    cn = sql.connect(host="127.0.0.1", user="root", password=Mysql_pass)
-    cr = cn.cursor()
-    cr.execute("create database if not exists schooldb")
-
     app = Flask(
         __name__,
         template_folder=os.path.join(BASE_DIR, "templates"),
