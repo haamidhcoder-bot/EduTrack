@@ -5,10 +5,10 @@ def initials_for_name(name):
     """Return up to two initials for a profile avatar."""
     cleaned = " ".join((name or "").strip().split())
     if not cleaned:
-        return "?"
+        return ""
     parts = re.findall(r"[A-Za-z0-9]+", cleaned)
     if not parts:
-        return "?"
+        return ""
     if len(parts) == 1:
         return parts[0][0].upper()
     return (parts[0][0] + parts[-1][0]).upper()

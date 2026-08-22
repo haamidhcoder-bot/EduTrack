@@ -16,7 +16,7 @@ from shared.config import Mysql_pass, session_key1
 from shared import db
 from shared.utils.logger import setup_logger
 from shared.services.profile_schema import ensure_profile_columns
-from app.routes import register_blueprints
+from .routes import register_blueprints
 
 # Project root (one level above the app/ package), so templates/ and
 # static/ are found in the same place they were relative to the original

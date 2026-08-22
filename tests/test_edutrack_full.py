@@ -1575,7 +1575,6 @@ def test_teacher_blueprints_contain_expected_endpoints():
     ):
         module = safe_import(module_name)
         blueprint = getattr(module, blueprint_name)
-        names = {rule.endpoint.split(".")[-1] for rule in blueprint.deferred_functions}
         # Blueprint deferred functions are implementation details and don't
         # expose route names reliably; the actual route inventory test below
         # uses a registered Flask application instead.
