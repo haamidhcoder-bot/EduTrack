@@ -75,6 +75,9 @@ EduTrack/
 │   └── utils/
 │
 ├── sample_data/
+├── tests/
+│   ├── conftest.py
+│   └── test_edutrack_full.py
 ├── requirements.txt
 ├── create_database.py
 ├── .gitignore
@@ -159,6 +162,18 @@ The applications can then be accessed at:
 Management side: http://127.0.0.1:5000
 Teacher side:     http://127.0.0.1:8000
 ```
+
+## Testing
+
+EduTrack includes a pytest suite (`tests/test_edutrack_full.py`) covering the shared decorators, teacher-side and management-side routes, and the shared services. It runs against isolated Flask apps with the database and other external services mocked, so it does not touch your real `schooldb` database, email account, Face ID files, or the AI API.
+
+Install pytest (included in `requirements.txt`) and run the suite from the project root:
+
+```bash
+pytest -q
+```
+
+All tests should pass on a clean checkout.
 
 ## Teacher Side
 
